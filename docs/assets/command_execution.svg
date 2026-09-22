@@ -1,0 +1,432 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 760" width="100%" height="100%" fill="none">
+  <defs>
+    <!-- Card Gradients -->
+    <linearGradient id="cardGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1A121E" stop-opacity="0.97"/>
+      <stop offset="100%" stop-color="#0F0C14" stop-opacity="0.97"/>
+    </linearGradient>
+
+    <linearGradient id="cardGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0C1B2E" stop-opacity="0.97"/>
+      <stop offset="100%" stop-color="#070E1C" stop-opacity="0.97"/>
+    </linearGradient>
+
+    <linearGradient id="cardGrad3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E1410" stop-opacity="0.97"/>
+      <stop offset="100%" stop-color="#100C0A" stop-opacity="0.97"/>
+    </linearGradient>
+
+    <linearGradient id="cardGrad4" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1A1215" stop-opacity="0.97"/>
+      <stop offset="100%" stop-color="#0F0B0E" stop-opacity="0.97"/>
+    </linearGradient>
+
+    <linearGradient id="cardGrad5" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0B201A" stop-opacity="0.97"/>
+      <stop offset="100%" stop-color="#061410" stop-opacity="0.97"/>
+    </linearGradient>
+
+    <!-- Accent Gradients -->
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF3700"/>
+      <stop offset="100%" stop-color="#FFA200"/>
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+    <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#DC2626"/>
+      <stop offset="100%" stop-color="#F87171"/>
+    </linearGradient>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#A5B4FC"/>
+    </linearGradient>
+
+    <!-- Soft Drop Shadow -->
+    <filter id="pptShadow" x="-6%" y="-6%" width="112%" height="114%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+
+    <!-- Arrow Marker -->
+    <marker id="flowArrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#818CF8"/>
+    </marker>
+    <marker id="loopArrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#10B981"/>
+    </marker>
+  </defs>
+
+  <style>
+    text {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      text-rendering: geometricPrecision;
+      -webkit-font-smoothing: antialiased;
+    }
+    .col-header { font-size: 17px; font-weight: 800; fill: #FFFFFF; }
+    .col-sub { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
+    .device-tag { font-size: 9.5px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; }
+    .block-h { font-size: 13.5px; font-weight: 700; fill: #F8FAFC; }
+    .block-p { font-size: 11.5px; fill: #CBD5E1; font-weight: 400; }
+    .block-meta { font-size: 10.5px; fill: #94A3B8; }
+    .badge-t { font-size: 9.5px; font-weight: 700; letter-spacing: 0.5px; }
+  </style>
+
+
+  <!-- ========================== INTER-STAGE CONDUIT ARROWS ========================== -->
+  <g opacity="0.85">
+    <!-- Arrow 1 -> 2 -->
+    <path d="M 325 330 L 345 330" stroke="#818CF8" stroke-width="2.5" marker-end="url(#flowArrow)"/>
+    <!-- Arrow 2 -> 3 -->
+    <path d="M 630 330 L 650 330" stroke="#818CF8" stroke-width="2.5" marker-end="url(#flowArrow)"/>
+    <!-- Arrow 3 -> 4 -->
+    <path d="M 935 330 L 955 330" stroke="#818CF8" stroke-width="2.5" marker-end="url(#flowArrow)"/>
+    <!-- Arrow 4 -> 5 -->
+    <path d="M 1240 330 L 1260 330" stroke="#818CF8" stroke-width="2.5" marker-end="url(#flowArrow)"/>
+  </g>
+
+
+  <!-- ========================== STAGE 1: INTENT INGESTION ========================== -->
+  <g transform="translate(40, 20)" filter="url(#pptShadow)">
+    <rect width="285" height="610" rx="14" fill="url(#cardGrad1)" stroke="#FF5500" stroke-width="1.8" stroke-opacity="0.85"/>
+
+    <!-- Header Section -->
+    <rect width="285" height="74" rx="14" fill="#FF5500" fill-opacity="0.12"/>
+    <path d="M 0 74 L 285 74" stroke="#FF5500" stroke-opacity="0.25" stroke-width="1"/>
+
+    <!-- Device Pill -->
+    <rect x="16" y="12" width="112" height="18" rx="4" fill="#FF5500" fill-opacity="0.25"/>
+    <text x="72" y="24.5" fill="#FFA200" class="device-tag" text-anchor="middle">📱 iQOO 15 PHONE</text>
+
+    <!-- Stage Title -->
+    <text x="16" y="48" class="col-header">1. Intent Ingestion</text>
+    <text x="16" y="64" class="col-sub" fill="#FFAA66">VOICE / CLI GOAL CAPTURE</text>
+
+    <!-- Block A: Input Capture -->
+    <g transform="translate(14, 88)">
+      <rect width="257" height="120" rx="8" fill="#15111B" stroke="#2B2135" stroke-width="1"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 120 A 8 8 0 0 1 0 112 Z" fill="#FF5500"/>
+      <text x="18" y="24" class="block-h">Input Modalities</text>
+      <text x="18" y="48" class="block-p">• Voice Input: Microphone</text>
+      <text x="18" y="68" class="block-p">• CLI Command Argument</text>
+      <text x="18" y="88" class="block-meta">Example: `clicker "fix test failure`</text>
+      <text x="18" y="104" class="block-meta">`in tests/test_calc.py"`</text>
+    </g>
+
+    <!-- Block B: On-Device Processing -->
+    <g transform="translate(14, 220)">
+      <rect width="257" height="165" rx="8" fill="#18111B" stroke="#FF5500" stroke-width="1" stroke-opacity="0.5"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 165 A 8 8 0 0 1 0 157 Z" fill="#FF5500"/>
+      <text x="18" y="24" class="block-h">Hexagon NPU Speech</text>
+      <text x="18" y="48" class="block-p">• On-Device Whisper STT</text>
+      <text x="18" y="68" class="block-p">• Qualcomm QNN Coprocessor</text>
+      <text x="18" y="88" class="block-p">• Latency: ~182 ms P50</text>
+      <text x="18" y="108" class="block-p">• Zero cloud API dependency</text>
+      <text x="18" y="128" class="block-p">• 100% offline &amp; air-gapped</text>
+      <rect x="18" y="136" width="90" height="18" rx="4" fill="#FF5500" fill-opacity="0.2"/>
+      <text x="63" y="148.5" fill="#FFA200" class="badge-t" text-anchor="middle">182ms WHISPER</text>
+    </g>
+
+    <!-- Block C: Output Frame -->
+    <g transform="translate(14, 397)">
+      <rect width="257" height="120" rx="8" fill="#14111A" stroke="#2B2135" stroke-width="1"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 120 A 8 8 0 0 1 0 112 Z" fill="#FFA200"/>
+      <text x="18" y="24" class="block-h">Output Goal Frame</text>
+      <text x="18" y="48" class="block-p">• Parsed Goal String</text>
+      <text x="18" y="68" class="block-p">• Constraints &amp; Working Dir</text>
+      <text x="18" y="88" class="block-p">• Session ID initialized</text>
+      <text x="18" y="106" class="block-meta">Dispatches execution cycle ➔</text>
+    </g>
+
+    <!-- Status Footer -->
+    <g transform="translate(14, 550)">
+      <rect width="257" height="46" rx="6" fill="#0A0D15" stroke="#251F30" stroke-width="1"/>
+      <circle cx="16" cy="23" r="4" fill="#10B981"/>
+      <text x="26" y="26" fill="#F1F5F9" font-size="11" font-weight="700">Hexagon NPU: Active</text>
+      <text x="26" y="38" fill="#64748B" font-size="10">Snapdragon 8 Elite • 45 TOPS</text>
+    </g>
+  </g>
+
+
+  <!-- ========================== STAGE 2: PERCEPTION ========================== -->
+  <g transform="translate(345, 20)" filter="url(#pptShadow)">
+    <rect width="285" height="610" rx="14" fill="url(#cardGrad2)" stroke="#0284C7" stroke-width="1.8" stroke-opacity="0.85"/>
+
+    <!-- Header Section -->
+    <rect width="285" height="74" rx="14" fill="#0078D6" fill-opacity="0.12"/>
+    <path d="M 0 74 L 285 74" stroke="#0078D6" stroke-opacity="0.25" stroke-width="1"/>
+
+    <!-- Device Pill -->
+    <rect x="16" y="12" width="118" height="18" rx="4" fill="#0078D6" fill-opacity="0.25"/>
+    <text x="75" y="24.5" fill="#38BDF8" class="device-tag" text-anchor="middle">💻 WORKSTATION</text>
+
+    <!-- Stage Title -->
+    <text x="16" y="48" class="col-header">2. Environment State</text>
+    <text x="16" y="64" class="col-sub" fill="#38BDF8">MULTI-MODAL PERCEPTION</text>
+
+    <!-- Block A: Screen & UI -->
+    <g transform="translate(14, 88)">
+      <rect width="257" height="120" rx="8" fill="#0E1D33" stroke="#1D385C" stroke-width="1"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 120 A 8 8 0 0 1 0 112 Z" fill="#0078D6"/>
+      <text x="18" y="24" class="block-h">Desktop Perception</text>
+      <text x="18" y="48" class="block-p">• DPI Screen Capture (`mss`)</text>
+      <text x="18" y="68" class="block-p">• Win32 UIAutomation Tree</text>
+      <text x="18" y="88" class="block-p">• Direct3D 12 WinRT OCR</text>
+      <text x="18" y="106" class="block-meta">P50 Capture Time: 148.5 ms</text>
+    </g>
+
+    <!-- Block B: Terminal & AST -->
+    <g transform="translate(14, 220)">
+      <rect width="257" height="165" rx="8" fill="#0C1B2E" stroke="#0284C7" stroke-width="1" stroke-opacity="0.5"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 165 A 8 8 0 0 1 0 157 Z" fill="#38BDF8"/>
+      <text x="18" y="24" class="block-h">Trace &amp; Source State</text>
+      <text x="18" y="48" class="block-p">• Compiler exit code (0 / err)</text>
+      <text x="18" y="68" class="block-p">• Raw stderr / stdout tail</text>
+      <text x="18" y="88" class="block-p">• Active file &amp; line focus</text>
+      <text x="18" y="108" class="block-p">• Git working tree status</text>
+      <text x="18" y="128" class="block-p">• Culprit error signature</text>
+      <rect x="18" y="136" width="98" height="18" rx="4" fill="#0078D6" fill-opacity="0.25"/>
+      <text x="67" y="148.5" fill="#38BDF8" class="badge-t" text-anchor="middle">UIA + OCR SYNC</text>
+    </g>
+
+    <!-- Block C: Telemetry Transport -->
+    <g transform="translate(14, 397)">
+      <rect width="257" height="120" rx="8" fill="#0B1A2C" stroke="#1D385C" stroke-width="1"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 120 A 8 8 0 0 1 0 112 Z" fill="#38BDF8"/>
+      <text x="18" y="24" class="block-h">Dispatched to Phone</text>
+      <text x="18" y="48" class="block-p">• `StateObservation` frame</text>
+      <text x="18" y="68" class="block-p">• Over ADB USB / Wi-Fi</text>
+      <text x="18" y="88" class="block-p">• Wire transit: 1.5 ms</text>
+      <text x="18" y="106" class="block-meta">Received by Decision Core ➔</text>
+    </g>
+
+    <!-- Status Footer -->
+    <g transform="translate(14, 550)">
+      <rect width="257" height="46" rx="6" fill="#0A0E18" stroke="#1E293B" stroke-width="1"/>
+      <circle cx="16" cy="23" r="4" fill="#38BDF8"/>
+      <text x="26" y="26" fill="#F1F5F9" font-size="11" font-weight="700">COM Tree: Traversed</text>
+      <text x="26" y="38" fill="#64748B" font-size="10">WinRT OCR Tile-Cache: 0 Misses</text>
+    </g>
+  </g>
+
+
+  <!-- ========================== STAGE 3: DECISION ENGINE ========================== -->
+  <g transform="translate(650, 20)" filter="url(#pptShadow)">
+    <rect width="285" height="610" rx="14" fill="url(#cardGrad3)" stroke="#FF5500" stroke-width="1.8" stroke-opacity="0.85"/>
+
+    <!-- Header Section -->
+    <rect width="285" height="74" rx="14" fill="#FF5500" fill-opacity="0.12"/>
+    <path d="M 0 74 L 285 74" stroke="#FF5500" stroke-opacity="0.25" stroke-width="1"/>
+
+    <!-- Device Pill -->
+    <rect x="16" y="12" width="112" height="18" rx="4" fill="#FF5500" fill-opacity="0.25"/>
+    <text x="72" y="24.5" fill="#FFA200" class="device-tag" text-anchor="middle">📱 iQOO 15 PHONE</text>
+
+    <!-- Stage Title -->
+    <text x="16" y="48" class="col-header">3. Bounded Decision</text>
+    <text x="16" y="64" class="col-sub" fill="#FFAA66">EDGE DECISION &amp; LEDGER</text>
+
+    <!-- Block A: Decision Core -->
+    <g transform="translate(14, 88)">
+      <rect width="257" height="120" rx="8" fill="#1C110C" stroke="#3D2014" stroke-width="1"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 120 A 8 8 0 0 1 0 112 Z" fill="#FF5500"/>
+      <text x="18" y="24" class="block-h">7-Rule Deterministic FSM</text>
+      <text x="18" y="48" class="block-p">• 12.4 ms Decision Speed</text>
+      <text x="18" y="68" class="block-p">• 8 Bounded Action Space</text>
+      <text x="18" y="88" class="block-p">• 0% Prompt Drift / No Halluc</text>
+      <text x="18" y="106" class="block-meta">117× faster than cloud LLMs</text>
+    </g>
+
+    <!-- Block B: Probability Normalization -->
+    <g transform="translate(14, 220)">
+      <rect width="257" height="165" rx="8" fill="#20130E" stroke="#FF5500" stroke-width="1" stroke-opacity="0.5"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 165 A 8 8 0 0 1 0 157 Z" fill="#FFA200"/>
+      <text x="18" y="24" class="block-h">8-Action Selection</text>
+      <text x="18" y="48" class="block-p">• `APPLY_FIX` / `RERUN_BUILD`</text>
+      <text x="18" y="68" class="block-p">• `RUN_TARGETED_TEST`</text>
+      <text x="18" y="88" class="block-p">• `INSPECT_ERROR` / `DONE`</text>
+      <text x="18" y="108" class="block-p">• Normalized Sum = 1.0</text>
+      <text x="18" y="128" class="block-p">• Confidence floor: p ≥ 0.60</text>
+      <rect x="18" y="136" width="98" height="18" rx="4" fill="#10B981" fill-opacity="0.2"/>
+      <text x="67" y="148.5" fill="#34D399" class="badge-t" text-anchor="middle">12.4ms DECISION</text>
+    </g>
+
+    <!-- Block C: Ledger Commit -->
+    <g transform="translate(14, 397)">
+      <rect width="257" height="120" rx="8" fill="#16121C" stroke="#2D2038" stroke-width="1"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 120 A 8 8 0 0 1 0 112 Z" fill="#818CF8"/>
+      <text x="18" y="24" class="block-h">7-Pillar Ledger Commit</text>
+      <text x="18" y="48" class="block-p">• Immutable Ground Truth log</text>
+      <text x="18" y="68" class="block-p">• 16-char SHA-256 error hash</text>
+      <text x="18" y="88" class="block-p">• Circuit Breaker checked</text>
+      <text x="18" y="106" class="block-meta">Dispatches DecisionCommand ➔</text>
+    </g>
+
+    <!-- Status Footer -->
+    <g transform="translate(14, 550)">
+      <rect width="257" height="46" rx="6" fill="#0A0D15" stroke="#251F30" stroke-width="1"/>
+      <circle cx="16" cy="23" r="4" fill="#10B981"/>
+      <text x="26" y="26" fill="#F1F5F9" font-size="11" font-weight="700">Action: APPLY_FIX (p=0.94)</text>
+      <text x="26" y="38" fill="#64748B" font-size="10">Target: test_calc.py:L42</text>
+    </g>
+  </g>
+
+
+  <!-- ========================== STAGE 4: SAFETY GATE & EXECUTION ========================== -->
+  <g transform="translate(955, 20)" filter="url(#pptShadow)">
+    <rect width="285" height="610" rx="14" fill="url(#cardGrad4)" stroke="#EF4444" stroke-width="1.8" stroke-opacity="0.85"/>
+
+    <!-- Header Section -->
+    <rect width="285" height="74" rx="14" fill="#EF4444" fill-opacity="0.12"/>
+    <path d="M 0 74 L 285 74" stroke="#EF4444" stroke-opacity="0.25" stroke-width="1"/>
+
+    <!-- Device Pill -->
+    <rect x="16" y="12" width="118" height="18" rx="4" fill="#EF4444" fill-opacity="0.25"/>
+    <text x="75" y="24.5" fill="#F87171" class="device-tag" text-anchor="middle">💻 WORKSTATION</text>
+
+    <!-- Stage Title -->
+    <text x="16" y="48" class="col-header">4. Guarded Execution</text>
+    <text x="16" y="64" class="col-sub" fill="#F87171">SAFETY GATE &amp; OS EXEC</text>
+
+    <!-- Block A: Corner Abort -->
+    <g transform="translate(14, 88)">
+      <rect width="257" height="120" rx="8" fill="#1F1215" stroke="#3D2025" stroke-width="1"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 120 A 8 8 0 0 1 0 112 Z" fill="#EF4444"/>
+      <text x="18" y="24" class="block-h">Hardware Corner Abort</text>
+      <text x="18" y="48" class="block-p">• Mouse at (0, 0 ± 10px)?</text>
+      <text x="18" y="68" class="block-p">• &lt; 0.6 ms Hardware Kill</text>
+      <text x="18" y="88" class="block-p">• Instant Human Takeover</text>
+      <text x="18" y="106" class="block-meta">Zero runaway automation</text>
+    </g>
+
+    <!-- Block B: SafetyGate Filters -->
+    <g transform="translate(14, 220)">
+      <rect width="257" height="165" rx="8" fill="#221318" stroke="#EF4444" stroke-width="1" stroke-opacity="0.5"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 165 A 8 8 0 0 1 0 157 Z" fill="#EF4444"/>
+      <text x="18" y="24" class="block-h">Destructive Filter Gate</text>
+      <text x="18" y="48" class="block-p">• Blocked: `rm -rf`, `git reset`</text>
+      <text x="18" y="68" class="block-p">• Blocked: `.env`, `del /f /q`</text>
+      <text x="18" y="88" class="block-p">• 30s Timeout Ceiling</text>
+      <text x="18" y="108" class="block-p">• 100-Step Max Session Guard</text>
+      <text x="18" y="128" class="block-p">• If destructive ➔ Ask human</text>
+      <rect x="18" y="136" width="90" height="18" rx="4" fill="#EF4444" fill-opacity="0.2"/>
+      <text x="63" y="148.5" fill="#F87171" class="badge-t" text-anchor="middle">&lt;0.6ms GATE</text>
+    </g>
+
+    <!-- Block C: Deterministic Execution -->
+    <g transform="translate(14, 397)">
+      <rect width="257" height="120" rx="8" fill="#101826" stroke="#1D2A3D" stroke-width="1"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 120 A 8 8 0 0 1 0 112 Z" fill="#38BDF8"/>
+      <text x="18" y="24" class="block-h">OS Execution (Safe)</text>
+      <text x="18" y="48" class="block-p">• Win32 `SendInput` (μs keys)</text>
+      <text x="18" y="68" class="block-p">• Subprocess test runner</text>
+      <text x="18" y="88" class="block-p">• Non-blocking isolated exec</text>
+      <text x="18" y="106" class="block-meta">Dispatched to Verifier ➔</text>
+    </g>
+
+    <!-- Status Footer -->
+    <g transform="translate(14, 550)">
+      <rect width="257" height="46" rx="6" fill="#0A0E18" stroke="#1E293B" stroke-width="1"/>
+      <circle cx="16" cy="23" r="4" fill="#10B981"/>
+      <text x="26" y="26" fill="#F1F5F9" font-size="11" font-weight="700">Safety Check: PASSED</text>
+      <text x="26" y="38" fill="#64748B" font-size="10">Command verified safe to execute</text>
+    </g>
+  </g>
+
+
+  <!-- ========================== STAGE 5: VERIFY & FEEDBACK ========================== -->
+  <g transform="translate(1260, 20)" filter="url(#pptShadow)">
+    <rect width="300" height="610" rx="14" fill="url(#cardGrad5)" stroke="#10B981" stroke-width="1.8" stroke-opacity="0.85"/>
+
+    <!-- Header Section -->
+    <rect width="300" height="74" rx="14" fill="#10B981" fill-opacity="0.12"/>
+    <path d="M 0 74 L 300 74" stroke="#10B981" stroke-opacity="0.25" stroke-width="1"/>
+
+    <!-- Device Pill -->
+    <rect x="16" y="12" width="138" height="18" rx="4" fill="#10B981" fill-opacity="0.25"/>
+    <text x="85" y="24.5" fill="#34D399" class="device-tag" text-anchor="middle">💻 LAPTOP ➔ 📱 PHONE</text>
+
+    <!-- Stage Title -->
+    <text x="16" y="48" class="col-header">5. Verify &amp; Feedback</text>
+    <text x="16" y="64" class="col-sub" fill="#34D399">OBJECTIVE TRUTH &amp; RECEIPT</text>
+
+    <!-- Block A: Objective Verification -->
+    <g transform="translate(14, 88)">
+      <rect width="272" height="120" rx="8" fill="#0B2019" stroke="#143B2E" stroke-width="1"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 120 A 8 8 0 0 1 0 112 Z" fill="#10B981"/>
+      <text x="18" y="24" class="block-h">Zero Self-Certification</text>
+      <text x="18" y="48" class="block-p">• Check 1: Exit code `assert == 0`</text>
+      <text x="18" y="68" class="block-p">• Check 2: Regex test output</text>
+      <text x="18" y="88" class="block-p">• Check 3: Python AST Syntax diff</text>
+      <text x="18" y="106" class="block-meta">LLM never grades its own output</text>
+    </g>
+
+    <!-- Block B: Action Receipt Dispatch -->
+    <g transform="translate(14, 220)">
+      <rect width="272" height="165" rx="8" fill="#09241C" stroke="#10B981" stroke-width="1" stroke-opacity="0.5"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 165 A 8 8 0 0 1 0 157 Z" fill="#34D399"/>
+      <text x="18" y="24" class="block-h">ActionReceipt Generated</text>
+      <text x="18" y="48" class="block-p">• `status: SUCCESS`</text>
+      <text x="18" y="68" class="block-p">• `exit_code: 0` + stdout/stderr</text>
+      <text x="18" y="88" class="block-p">• `verification_passed: True`</text>
+      <text x="18" y="108" class="block-p">• Sent via Bridge in 1.5 ms</text>
+      <text x="18" y="128" class="block-p">• Ledger commits new state facts</text>
+      <rect x="18" y="136" width="102" height="18" rx="4" fill="#10B981" fill-opacity="0.25"/>
+      <text x="69" y="148.5" fill="#34D399" class="badge-t" text-anchor="middle">OBJECTIVE TRUTH</text>
+    </g>
+
+    <!-- Block C: Spoken Voice Feedback -->
+    <g transform="translate(14, 397)">
+      <rect width="272" height="120" rx="8" fill="#101826" stroke="#1D2A3D" stroke-width="1"/>
+      <path d="M 0 8 A 8 8 0 0 1 8 0 L 8 120 A 8 8 0 0 1 0 112 Z" fill="#38BDF8"/>
+      <text x="18" y="24" class="block-h">Spoken Audio Feedback</text>
+      <text x="18" y="48" class="block-p">• WinRT / SAPI Local TTS</text>
+      <text x="18" y="68" class="block-p">• Spoken task completion</text>
+      <text x="18" y="88" class="block-p">• "Task fixed. All 4 tests pass."</text>
+      <text x="18" y="106" class="block-meta">Developer never switches context</text>
+    </g>
+
+    <!-- Status Footer -->
+    <g transform="translate(14, 550)">
+      <rect width="272" height="46" rx="6" fill="#0A0E18" stroke="#1E293B" stroke-width="1"/>
+      <circle cx="16" cy="23" r="4" fill="#10B981"/>
+      <text x="26" y="26" fill="#F1F5F9" font-size="11" font-weight="700">Verification: 100% PASSED</text>
+      <text x="26" y="38" fill="#64748B" font-size="10">Duration: 62.1 ms • Zero Regressions</text>
+    </g>
+  </g>
+
+
+  <!-- ========================== BOTTOM: THE CLOSED-LOOP FEEDBACK BAR ========================== -->
+  <g transform="translate(40, 648)" filter="url(#pptShadow)">
+    <rect width="1520" height="92" rx="12" fill="#0D1322" stroke="#25334A" stroke-width="1.2"/>
+
+    <!-- Left loop indicator -->
+    <g transform="translate(24, 18)">
+      <rect width="210" height="26" rx="13" fill="#6366F1" fill-opacity="0.2" stroke="#818CF8" stroke-width="1"/>
+      <circle cx="14" cy="13" r="4" fill="#818CF8"/>
+      <text x="26" y="17" fill="#A5B4FC" font-size="11" font-weight="800">CLOSED-LOOP CYCLE</text>
+      <text x="155" y="17" fill="#CBD5E1" font-size="10.5" font-weight="700">~420ms Total</text>
+    </g>
+
+    <!-- Feedback flow line -->
+    <path d="M 1480 32 L 280 32" stroke="#10B981" stroke-width="2.5" stroke-dasharray="8,5" marker-end="url(#loopArrow)"/>
+    <text x="880" y="24" fill="#34D399" font-size="11" font-weight="700" text-anchor="middle">
+      ◀ ── IF ACTION ≠ DONE: Next Observation Loop (Updated Facts &amp; State Ledger) ──
+    </text>
+
+    <!-- Bottom subtext -->
+    <g transform="translate(24, 56)">
+      <text x="0" y="14" fill="#F8FAFC" font-size="12" font-weight="700">
+        • If Action == <tspan fill="#34D399">DONE</tspan>: Terminal state reached ➔ Local TTS speaks confirmation to developer ➔ Session gracefully completes
+      </text>
+      <text x="0" y="30" fill="#94A3B8" font-size="11">
+        • Anti-Oscillation Guard: If the same 16-char SHA-256 error signature repeats ≥ 3 times, the circuit breaker automatically halts and requests human clarification.
+      </text>
+    </g>
+  </g>
+</svg>

@@ -72,6 +72,14 @@ class DecisionCommand:
     def from_json(cls, json_str: str) -> DecisionCommand:
         return cls.from_dict(json.loads(json_str))
 
+    def is_valid(self) -> bool:
+        """Validate command parameters and confidence boundaries."""
+        return bool(
+            self.command_id
+            and self.action in DeveloperAction.all_actions()
+            and 0.0 <= self.confidence <= 1.0
+        )
+
 
 @dataclass(frozen=True)
 class ActionReceipt:
@@ -139,3 +147,11 @@ class ActionReceipt:
     @classmethod
     def from_json(cls, json_str: str) -> ActionReceipt:
         return cls.from_dict(json.loads(json_str))
+
+    def is_valid(self) -> bool:
+        """Validate receipt status and bounds."""
+        return bool(
+            self.command_id
+            and self.action in DeveloperAction.all_actions()
+            and self.status in {"SUCCESS", "FAILED", "BLOCKED_BY_SAFETY", "ABORTED"}
+        )

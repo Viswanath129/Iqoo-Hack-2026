@@ -1,0 +1,354 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 760" width="100%" height="100%" fill="none">
+  <defs>
+    <!-- Card Gradients with soft translucent depth -->
+    <linearGradient id="phoneCard" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1A121E" stop-opacity="0.97"/>
+      <stop offset="100%" stop-color="#100C14" stop-opacity="0.97"/>
+    </linearGradient>
+
+    <linearGradient id="bridgeCard" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#121626" stop-opacity="0.97"/>
+      <stop offset="100%" stop-color="#0B0E1A" stop-opacity="0.97"/>
+    </linearGradient>
+
+    <linearGradient id="laptopCard" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0C1B2E" stop-opacity="0.97"/>
+      <stop offset="100%" stop-color="#070E1C" stop-opacity="0.97"/>
+    </linearGradient>
+
+    <!-- Channel Row Gradients -->
+    <linearGradient id="chanObs" x1="100%" y1="0%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#0C233F"/>
+      <stop offset="100%" stop-color="#07172C"/>
+    </linearGradient>
+
+    <linearGradient id="chanCmd" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#36170A"/>
+      <stop offset="100%" stop-color="#1F0D06"/>
+    </linearGradient>
+
+    <linearGradient id="chanRec" x1="100%" y1="0%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#0C2B20"/>
+      <stop offset="100%" stop-color="#061A13"/>
+    </linearGradient>
+
+    <!-- Accent Gradients -->
+    <linearGradient id="iqooOrange" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF3700"/>
+      <stop offset="100%" stop-color="#FFA200"/>
+    </linearGradient>
+
+    <linearGradient id="azureBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+
+    <linearGradient id="indigoPurple" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#A5B4FC"/>
+    </linearGradient>
+
+    <!-- Soft Presentation Drop Shadow -->
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="112%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+
+    <!-- Arrow Markers -->
+    <marker id="arrCyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#38BDF8"/>
+    </marker>
+    <marker id="arrOrange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#FF7722"/>
+    </marker>
+    <marker id="arrGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#10B981"/>
+    </marker>
+  </defs>
+
+  <style>
+    text {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      text-rendering: geometricPrecision;
+      -webkit-font-smoothing: antialiased;
+    }
+    .col-title { font-size: 21px; font-weight: 800; fill: #FFFFFF; letter-spacing: -0.2px; }
+    .col-sub { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
+    .block-h { font-size: 14.5px; font-weight: 700; fill: #F8FAFC; }
+    .block-p { font-size: 12px; fill: #CBD5E1; font-weight: 400; }
+    .badge-t { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
+    .hw-title { font-size: 14.5px; font-weight: 800; }
+    .hw-sub { font-size: 12px; fill: #E2E8F0; font-weight: 500; }
+    .hw-meta { font-size: 11px; fill: #94A3B8; }
+  </style>
+
+  <!-- ========================== EXTERNAL CONNECTIONS (BEHIND PILLARS) ========================== -->
+  <g opacity="0.85">
+    <!-- Channel 1 connection (Laptop Perception -> Highway 1 -> Phone Decision) -->
+    <path d="M 1120 188 L 1150 188" stroke="#38BDF8" stroke-width="2.5" stroke-dasharray="4,4"/>
+    <circle cx="1150" cy="188" r="4" fill="#38BDF8"/>
+    <path d="M 450 188 L 480 188" stroke="#38BDF8" stroke-width="2.5" stroke-dasharray="4,4"/>
+    <circle cx="450" cy="188" r="4" fill="#38BDF8"/>
+
+    <!-- Channel 2 connection (Phone Decision -> Highway 2 -> Laptop Safety) -->
+    <path d="M 450 332 L 480 332" stroke="#FF7722" stroke-width="2.5" stroke-dasharray="4,4"/>
+    <circle cx="450" cy="332" r="4" fill="#FF7722"/>
+    <path d="M 1120 332 L 1150 332" stroke="#FF7722" stroke-width="2.5" stroke-dasharray="4,4"/>
+    <circle cx="1150" cy="332" r="4" fill="#FF7722"/>
+
+    <!-- Channel 3 connection (Laptop Verifier -> Highway 3 -> Phone Ledger) -->
+    <path d="M 1120 478 L 1150 478" stroke="#10B981" stroke-width="2.5" stroke-dasharray="4,4"/>
+    <circle cx="1150" cy="478" r="4" fill="#10B981"/>
+    <path d="M 450 478 L 480 478" stroke="#10B981" stroke-width="2.5" stroke-dasharray="4,4"/>
+    <circle cx="450" cy="478" r="4" fill="#10B981"/>
+  </g>
+
+
+  <!-- ========================== 1. LEFT PILLAR: iQOO 15 (EDGE BRAIN) ========================== -->
+  <g transform="translate(40, 20)" filter="url(#cardShadow)">
+    <rect width="410" height="715" rx="16" fill="url(#phoneCard)" stroke="#FF5500" stroke-width="1.8" stroke-opacity="0.9"/>
+
+    <!-- Header Section -->
+    <rect width="410" height="72" rx="16" fill="#FF5500" fill-opacity="0.12"/>
+    <path d="M 0 72 L 410 72" stroke="#FF5500" stroke-opacity="0.25" stroke-width="1"/>
+
+    <!-- Phone Glyph -->
+    <g transform="translate(18, 16)">
+      <rect width="40" height="40" rx="10" fill="#FF5500" fill-opacity="0.2" stroke="#FF5500" stroke-width="1.2"/>
+      <rect x="14" y="9" width="12" height="22" rx="2.5" fill="none" stroke="#FFFFFF" stroke-width="1.8"/>
+      <circle cx="20" cy="26" r="1.2" fill="#FFA200"/>
+    </g>
+    <text x="68" y="36" class="col-title">iQOO 15 Smartphone</text>
+    <text x="68" y="54" class="col-sub" fill="#FFAA66">EDGE BRAIN • SNAPDRAGON 8 ELITE</text>
+    <rect x="316" y="18" width="76" height="20" rx="4" fill="#FF5500" fill-opacity="0.2"/>
+    <text x="354" y="32" fill="#FFA200" class="badge-t" text-anchor="middle">45 TOPS</text>
+
+    <!-- Block 1: Developer Intent Ingestion -->
+    <g transform="translate(16, 86)">
+      <rect width="378" height="102" rx="10" fill="#15111B" stroke="#2B2135" stroke-width="1"/>
+      <path d="M 0 10 A 10 10 0 0 1 10 0 L 10 102 A 10 10 0 0 1 0 92 Z" fill="#FF5500"/>
+      <text x="22" y="28" class="block-h">Developer Intent Ingestion</text>
+      <text x="22" y="54" class="block-p">• Voice Input: Whisper STT (Hexagon NPU ~182ms)</text>
+      <text x="22" y="78" class="block-p">• Direct CLI Goal Parser (`clicker` command)</text>
+      <rect x="282" y="12" width="84" height="20" rx="4" fill="#FF5500" fill-opacity="0.2" stroke="#FF5500" stroke-width="0.8"/>
+      <text x="324" y="25.5" fill="#FFA200" class="badge-t" text-anchor="middle">OFFLINE STT</text>
+    </g>
+
+    <!-- Block 2: Bounded Decision Engine -->
+    <g transform="translate(16, 202)">
+      <rect width="378" height="142" rx="10" fill="#1A1116" stroke="#FF5500" stroke-width="1.2" stroke-opacity="0.5"/>
+      <path d="M 0 10 A 10 10 0 0 1 10 0 L 10 142 A 10 10 0 0 1 0 132 Z" fill="#FF5500"/>
+      <text x="22" y="28" class="block-h">Bounded Decision Engine</text>
+      <text x="22" y="54" class="block-p">• 7-Rule Deterministic FSM (12.4 ms latency)</text>
+      <text x="22" y="76" class="block-p">• 8 Bounded Actions (Normalized sum = 1.0)</text>
+      <text x="22" y="98" class="block-p">• On-Device SLM: Qwen 2.5 0.5B ONNX / GGUF</text>
+      <text x="22" y="120" class="block-p">• 0% Prompt Drift • Strict Schema Validation</text>
+      <rect x="290" y="12" width="76" height="20" rx="4" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="0.8"/>
+      <text x="328" y="25.5" fill="#34D399" class="badge-t" text-anchor="middle">12.4ms FSM</text>
+    </g>
+
+    <!-- Block 3: 7-Pillar State Ledger -->
+    <g transform="translate(16, 358)">
+      <rect width="378" height="122" rx="10" fill="#141424" stroke="#2D2C48" stroke-width="1"/>
+      <path d="M 0 10 A 10 10 0 0 1 10 0 L 10 122 A 10 10 0 0 1 0 112 Z" fill="#818CF8"/>
+      <text x="22" y="28" class="block-h">7-Pillar Truth-First State Ledger</text>
+      <text x="22" y="54" class="block-p">• Append-only ground truth: Goals, Facts, Audit</text>
+      <text x="22" y="76" class="block-p">• Deterministic 16-char SHA-256 Error Signatures</text>
+      <text x="22" y="98" class="block-p">• Anti-Oscillation Circuit Breaker (Prevents loops)</text>
+      <rect x="282" y="12" width="84" height="20" rx="4" fill="#6366F1" fill-opacity="0.2" stroke="#818CF8" stroke-width="0.8"/>
+      <text x="324" y="25.5" fill="#A5B4FC" class="badge-t" text-anchor="middle">ZERO DRIFT</text>
+    </g>
+
+    <!-- Block 4: Local Audio Feedback -->
+    <g transform="translate(16, 494)">
+      <rect width="378" height="96" rx="10" fill="#101726" stroke="#1D2E4A" stroke-width="1"/>
+      <path d="M 0 10 A 10 10 0 0 1 10 0 L 10 96 A 10 10 0 0 1 0 86 Z" fill="#38BDF8"/>
+      <text x="22" y="28" class="block-h">Local Speech Feedback (TTS)</text>
+      <text x="22" y="54" class="block-p">• Spoken task completion via local WinRT / SAPI</text>
+      <text x="22" y="76" class="block-p">• Hands-free audio updates without context-switch</text>
+      <rect x="286" y="12" width="80" height="20" rx="4" fill="#0284C7" fill-opacity="0.2" stroke="#38BDF8" stroke-width="0.8"/>
+      <text x="326" y="25.5" fill="#38BDF8" class="badge-t" text-anchor="middle">WINRT TTS</text>
+    </g>
+
+    <!-- Status Bar -->
+    <g transform="translate(16, 646)">
+      <rect width="378" height="50" rx="8" fill="#0A0D15" stroke="#251F30" stroke-width="1"/>
+      <circle cx="20" cy="25" r="4.5" fill="#10B981"/>
+      <text x="32" y="28" fill="#F1F5F9" font-size="11.5" font-weight="700">Hexagon NPU: 100% OFFLINE</text>
+      <text x="32" y="42" fill="#64748B" font-size="10.5">Air-gapped execution • Zero cloud API calls</text>
+      <rect x="288" y="14" width="78" height="22" rx="4" fill="#10B981" fill-opacity="0.2"/>
+      <text x="327" y="28.5" fill="#10B981" class="badge-t" text-anchor="middle">$0.00 COST</text>
+    </g>
+  </g>
+
+
+  <!-- ========================== 2. CENTER: OFFICEKIT BRIDGE ========================== -->
+  <g transform="translate(480, 20)" filter="url(#cardShadow)">
+    <rect width="640" height="715" rx="16" fill="url(#bridgeCard)" stroke="#6366F1" stroke-width="1.8" stroke-opacity="0.9"/>
+
+    <!-- Header Section -->
+    <rect width="640" height="72" rx="16" fill="#6366F1" fill-opacity="0.12"/>
+    <path d="M 0 72 L 640 72" stroke="#6366F1" stroke-opacity="0.25" stroke-width="1"/>
+
+    <text x="320" y="34" class="col-title" text-anchor="middle" fill="#A5B4FC">OfficeKit Bridge</text>
+    <text x="320" y="52" class="col-sub" text-anchor="middle" fill="#818CF8">LOW-LATENCY BI-DIRECTIONAL HARDWARE TELEMETRY</text>
+
+    <!-- Transports Row -->
+    <g transform="translate(30, 80)">
+      <rect x="0" y="0" width="180" height="24" rx="5" fill="#161B2E" stroke="#374151" stroke-width="1"/>
+      <circle cx="12" cy="12" r="3" fill="#6366F1"/>
+      <text x="22" y="16" fill="#CBD5E1" font-size="11" font-weight="600">ADB USB (480 Mbps)</text>
+
+      <rect x="200" y="0" width="180" height="24" rx="5" fill="#161B2E" stroke="#374151" stroke-width="1"/>
+      <circle cx="212" cy="12" r="3" fill="#38BDF8"/>
+      <text x="222" y="16" fill="#CBD5E1" font-size="11" font-weight="600">OfficeKit Wi-Fi (TCP)</text>
+
+      <rect x="400" y="0" width="180" height="24" rx="5" fill="#161B2E" stroke="#374151" stroke-width="1"/>
+      <circle cx="412" cy="12" r="3" fill="#10B981"/>
+      <text x="422" y="16" fill="#CBD5E1" font-size="11" font-weight="600">In-Memory IPC (CI/CD)</text>
+    </g>
+
+    <!-- TELEMETRY HIGHWAY 1: StateObservation (Laptop ➔ Phone) -->
+    <g transform="translate(18, 116)">
+      <rect width="604" height="122" rx="12" fill="url(#chanObs)" stroke="#0284C7" stroke-width="1.4"/>
+      <text x="22" y="28" class="hw-title" fill="#38BDF8">◀  1. StateObservation</text>
+      <text x="190" y="28" font-size="12.5" font-weight="700" fill="#94A3B8">(Laptop ➔ Phone)</text>
+      <rect x="486" y="12" width="102" height="24" rx="5" fill="#0284C7" fill-opacity="0.3" stroke="#38BDF8" stroke-width="0.8"/>
+      <text x="537" y="28" fill="#38BDF8" class="badge-t" text-anchor="middle">148.5 ms P50</text>
+
+      <!-- Flow Conduit Arrow (Right to Left) -->
+      <path d="M 570 56 L 24 56" stroke="#38BDF8" stroke-width="3" stroke-dasharray="8,5" marker-end="url(#arrCyan)"/>
+
+      <text x="22" y="84" class="hw-sub">DPI-Aware screen raster (`mss`) + Win32 UIA control tree + WinRT OCR</text>
+      <text x="22" y="104" class="hw-meta">Payload: compiler_exit_code, stdout/stderr, git_status, recent_error</text>
+    </g>
+
+    <!-- TELEMETRY HIGHWAY 2: DecisionCommand (Phone ➔ Laptop) -->
+    <g transform="translate(18, 252)">
+      <rect width="604" height="122" rx="12" fill="url(#chanCmd)" stroke="#FF5500" stroke-width="1.4"/>
+      <text x="22" y="28" class="hw-title" fill="#FF7722">2. DecisionCommand  ▶</text>
+      <text x="200" y="28" font-size="12.5" font-weight="700" fill="#FFAA66">(Phone ➔ Laptop)</text>
+      <rect x="486" y="12" width="102" height="24" rx="5" fill="#FF5500" fill-opacity="0.3" stroke="#FF5500" stroke-width="0.8"/>
+      <text x="537" y="28" fill="#FFA200" class="badge-t" text-anchor="middle">1.5 ms WIRE</text>
+
+      <!-- Flow Conduit Arrow (Left to Right) -->
+      <path d="M 24 56 L 570 56" stroke="#FF7722" stroke-width="3" stroke-dasharray="8,5" marker-end="url(#arrOrange)"/>
+
+      <text x="22" y="84" class="hw-sub">Typed action (1 of 8) + Confidence score + Full 8-Action Probabilities</text>
+      <text x="22" y="104" class="hw-meta">Payload: command_id, target_file, line_number, test_cmd, requires_confirmation</text>
+    </g>
+
+    <!-- TELEMETRY HIGHWAY 3: ActionReceipt (Laptop ➔ Phone) -->
+    <g transform="translate(18, 388)">
+      <rect width="604" height="122" rx="12" fill="url(#chanRec)" stroke="#10B981" stroke-width="1.4"/>
+      <text x="22" y="28" class="hw-title" fill="#10B981">◀  3. ActionReceipt</text>
+      <text x="165" y="28" font-size="12.5" font-weight="700" fill="#94A3B8">(Laptop ➔ Phone)</text>
+      <rect x="486" y="12" width="102" height="24" rx="5" fill="#10B981" fill-opacity="0.3" stroke="#10B981" stroke-width="0.8"/>
+      <text x="537" y="28" fill="#34D399" class="badge-t" text-anchor="middle">62.1 ms VERIF</text>
+
+      <!-- Flow Conduit Arrow (Right to Left) -->
+      <path d="M 570 56 L 24 56" stroke="#10B981" stroke-width="3" stroke-dasharray="8,5" marker-end="url(#arrGreen)"/>
+
+      <text x="22" y="84" class="hw-sub">Exit code (assert == 0) + stdout/err + Python AST syntax diff + Git diff</text>
+      <text x="22" y="104" class="hw-meta">Payload: verification_passed (bool), verification_details, duration_ns</text>
+    </g>
+
+    <!-- Wire Protocol Specs -->
+    <g transform="translate(18, 524)">
+      <rect width="604" height="66" rx="10" fill="#0C101E" stroke="#334155" stroke-width="1.2"/>
+      <circle cx="20" cy="24" r="4" fill="#818CF8"/>
+      <text x="32" y="27.5" fill="#F8FAFC" font-size="13" font-weight="700">Typed Dataclass Telemetry Wire Protocol</text>
+      <text x="20" y="48" fill="#94A3B8" font-size="11.5">Deterministic serialization • Zero dropped frames • Nanosecond hardware clock sync</text>
+    </g>
+
+    <!-- Closed Loop Control Banner -->
+    <g transform="translate(18, 602)">
+      <rect width="604" height="94" rx="10" fill="#0A0E18" stroke="#1E293B" stroke-width="1.2"/>
+      <!-- Loop badge -->
+      <rect x="16" y="14" width="230" height="24" rx="12" fill="#6366F1" fill-opacity="0.2" stroke="#818CF8" stroke-width="1"/>
+      <circle cx="28" cy="26" r="4" fill="#818CF8"/>
+      <text x="40" y="29.5" fill="#A5B4FC" font-size="11" font-weight="700">AUTONOMOUS CLOSED LOOP</text>
+      <text x="260" y="30" fill="#E2E8F0" font-size="12" font-weight="600">Perceive ➔ Decide ➔ Execute ➔ Verify</text>
+      
+      <text x="20" y="60" fill="#CBD5E1" font-size="12">• Cycle repeats autonomously until <tspan fill="#34D399" font-weight="700">DONE</tspan> action (Max 100 steps guardrail)</text>
+      <text x="20" y="78" fill="#94A3B8" font-size="11.5">• Total Loop Latency: <tspan fill="#10B981" font-weight="700">~420 ms</tspan> (Sub-2s target verified) • 0 Cloud Data Egress</text>
+    </g>
+  </g>
+
+
+  <!-- ========================== 3. RIGHT PILLAR: WORKSTATION / LAPTOP ========================== -->
+  <g transform="translate(1150, 20)" filter="url(#cardShadow)">
+    <rect width="410" height="715" rx="16" fill="url(#laptopCard)" stroke="#0078D6" stroke-width="1.8" stroke-opacity="0.9"/>
+
+    <!-- Header Section -->
+    <rect width="410" height="72" rx="16" fill="#0078D6" fill-opacity="0.12"/>
+    <path d="M 0 72 L 410 72" stroke="#0078D6" stroke-opacity="0.25" stroke-width="1"/>
+
+    <!-- Laptop Glyph -->
+    <g transform="translate(18, 16)">
+      <rect width="40" height="40" rx="10" fill="#0078D6" fill-opacity="0.2" stroke="#0078D6" stroke-width="1.2"/>
+      <rect x="10" y="12" width="20" height="13" rx="1.5" fill="none" stroke="#FFFFFF" stroke-width="1.8"/>
+      <line x1="7" y1="27" x2="33" y2="27" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"/>
+    </g>
+    <text x="68" y="36" class="col-title">Workstation / Laptop</text>
+    <text x="68" y="54" class="col-sub" fill="#38BDF8">EXECUTION &amp; INDEPENDENT VERIFIER</text>
+    <rect x="306" y="18" width="86" height="20" rx="4" fill="#0078D6" fill-opacity="0.2"/>
+    <text x="349" y="32" fill="#38BDF8" class="badge-t" text-anchor="middle">WIN11 / MAC</text>
+
+    <!-- Block 1: Multi-Modal Perception Engine -->
+    <g transform="translate(16, 86)">
+      <rect width="378" height="102" rx="10" fill="#0E1D33" stroke="#1D385C" stroke-width="1"/>
+      <path d="M 0 10 A 10 10 0 0 1 10 0 L 10 102 A 10 10 0 0 1 0 92 Z" fill="#0078D6"/>
+      <text x="22" y="28" class="block-h">Multi-Modal Perception Engine</text>
+      <text x="22" y="54" class="block-p">• DPI-Aware Screen Capture (`mss` multi-monitor)</text>
+      <text x="22" y="78" class="block-p">• Win32 UIAutomation COM tree + Direct3D OCR</text>
+      <rect x="282" y="12" width="84" height="20" rx="4" fill="#0078D6" fill-opacity="0.25" stroke="#38BDF8" stroke-width="0.8"/>
+      <text x="324" y="25.5" fill="#38BDF8" class="badge-t" text-anchor="middle">148.5ms P50</text>
+    </g>
+
+    <!-- Block 2: 7-Layer Concentric Safety Gate -->
+    <g transform="translate(16, 202)">
+      <rect width="378" height="142" rx="10" fill="#1C1318" stroke="#EF4444" stroke-width="1.2" stroke-opacity="0.6"/>
+      <path d="M 0 10 A 10 10 0 0 1 10 0 L 10 142 A 10 10 0 0 1 0 132 Z" fill="#EF4444"/>
+      <text x="22" y="28" class="block-h">7-Layer Concentric Safety Gate</text>
+      <text x="22" y="54" class="block-p">• Hardware Mouse Corner Abort (0,0 ➔ &lt;1ms kill)</text>
+      <text x="22" y="76" class="block-p">• Destructive Filter (`rm -rf`, `git reset`, `.env` blocked)</text>
+      <text x="22" y="98" class="block-p">• 30-Second Subprocess Ceiling &amp; 100-Step Guard</text>
+      <text x="22" y="120" class="block-p">• Command Allowlist &amp; Path Containment Jail</text>
+      <rect x="286" y="12" width="80" height="20" rx="4" fill="#EF4444" fill-opacity="0.2" stroke="#EF4444" stroke-width="0.8"/>
+      <text x="326" y="25.5" fill="#F87171" class="badge-t" text-anchor="middle">&lt;0.6ms GATE</text>
+    </g>
+
+    <!-- Block 3: Deterministic OS Execution -->
+    <g transform="translate(16, 358)">
+      <rect width="378" height="122" rx="10" fill="#0E1D30" stroke="#1A385E" stroke-width="1"/>
+      <path d="M 0 10 A 10 10 0 0 1 10 0 L 10 122 A 10 10 0 0 1 0 112 Z" fill="#38BDF8"/>
+      <text x="22" y="28" class="block-h">Deterministic OS Execution</text>
+      <text x="22" y="54" class="block-p">• Native Win32 `SendInput` (μs mouse/keyboard)</text>
+      <text x="22" y="76" class="block-p">• macOS Quartz / AppleScript &amp; ADB keyevents</text>
+      <text x="22" y="98" class="block-p">• Non-blocking isolated subprocess build runner</text>
+      <rect x="282" y="12" width="84" height="20" rx="4" fill="#0078D6" fill-opacity="0.2" stroke="#38BDF8" stroke-width="0.8"/>
+      <text x="324" y="25.5" fill="#38BDF8" class="badge-t" text-anchor="middle">185.0ms EXEC</text>
+    </g>
+
+    <!-- Block 4: Independent Verification Engine -->
+    <g transform="translate(16, 494)">
+      <rect width="378" height="96" rx="10" fill="#0B201A" stroke="#123B2F" stroke-width="1"/>
+      <path d="M 0 10 A 10 10 0 0 1 10 0 L 10 96 A 10 10 0 0 1 0 86 Z" fill="#10B981"/>
+      <text x="22" y="28" class="block-h">Independent Verification Engine</text>
+      <text x="22" y="54" class="block-p">• Zero Self-Certification (LLM cannot grade itself)</text>
+      <text x="22" y="76" class="block-p">• Compiler exit_code == 0 + Regex + Python AST diff</text>
+      <rect x="270" y="12" width="96" height="20" rx="4" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="0.8"/>
+      <text x="318" y="25.5" fill="#34D399" class="badge-t" text-anchor="middle">OBJECTIVE TRUTH</text>
+    </g>
+
+    <!-- Status Bar -->
+    <g transform="translate(16, 646)">
+      <rect width="378" height="50" rx="8" fill="#0A0E18" stroke="#1E293B" stroke-width="1"/>
+      <circle cx="20" cy="25" r="4.5" fill="#38BDF8"/>
+      <text x="32" y="28" fill="#F1F5F9" font-size="11.5" font-weight="700">OS Automation: COM UIA ONLINE</text>
+      <text x="32" y="42" fill="#64748B" font-size="10.5">Sandboxed Subprocess Active • 0 Errors</text>
+      <rect x="288" y="14" width="78" height="22" rx="4" fill="#38BDF8" fill-opacity="0.2"/>
+      <text x="327" y="28.5" fill="#38BDF8" class="badge-t" text-anchor="middle">READY (0 ERR)</text>
+    </g>
+  </g>
+</svg>
