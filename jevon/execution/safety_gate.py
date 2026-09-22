@@ -7,7 +7,6 @@ and sensitive credential/environment file access) until human confirmation.
 from __future__ import annotations
 
 import re
-from typing import Tuple
 
 from jevon.execution.allowlist import ALLOWED_COMMAND_PREFIXES
 

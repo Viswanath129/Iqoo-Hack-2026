@@ -37,12 +37,12 @@ During the live demo, set up your workstation like this:
 
 HackTracker logs specific interaction channels:
 
-| Channel | How Argus Triggers It | Frequency |
+| Channel | How JEVON Triggers It | Frequency |
 |---|---|---|
-| **Screen Mirroring** | Keep the Office Kit mirror active for the entire session | 100% of demo time |
-| **Clipboard Sync** | When Argus completes a test, copy the summary text to clipboard | After every test run |
-| **File Transfer** | Drag the generated HTML report and `annotated.png` from phone to PC | End of every demo |
-| **Input Events** | Use laptop keyboard/mouse to click phone via Office Kit during Red Light | Continuously |
+| **Screen Mirroring** | Keep the Office Kit mirror active showing JEVON developer control console | 100% of demo time |
+| **Clipboard Sync** | When JEVON verifies a build fix, copy the verified receipt to clipboard | After every verified cycle |
+| **File Transfer** | Sync benchmark telemetry, test results, and audit logs from phone to PC | End of every cycle |
+| **Input Events** | Use laptop keyboard/mouse to interact with phone console via Office Kit | Continuously |
 
 ---
 

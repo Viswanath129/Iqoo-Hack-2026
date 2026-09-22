@@ -6,13 +6,12 @@ Defines the strongly-typed telemetry frames exchanged between the Phone
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
 import json
 import time
+from dataclasses import dataclass, field
 from typing import Any
 
 from jevon.decision.actions import DeveloperAction
-from jevon.decision.provider import StateObservation
 
 
 @dataclass(frozen=True)

@@ -57,12 +57,12 @@ Every requirement from `ORIGINAL_REQUEST.md` (R1-R6) is inventoried and mapped t
 
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| M1 | Core Decision Engine & Truth-First State | `jevon/decision/` (`DecisionProvider`, `LocalDecisionProvider`, `TypeSafeJevProvider`, `SafetyFallback`, 8 actions, probability distribution) and `jevon/truth_first/` (7-pillar ledger) | none | IN_PROGRESS |
-| M2 | OfficeKitBridge & Dual-Device Telemetry | `jevon/bridge/` (`OfficeKitBridge`, `AdbTunnelTransport`, `SocketTransport`, `IpcTransport`, `StateObservation`, `DecisionCommand`, `ActionReceipt`) | M1 | PLANNED |
-| M3 | Laptop Action Execution & Verification Engine | `jevon/execution/` (`LaptopActionExecutor`, failsafe bounds, mouse corner, `SafetyGate`) and `jevon/verification/` (`VerificationEngine`, regex, exit code, AST, git diff) + closed loop | M1, M2 | PLANNED |
-| M4 | On-Device Perception & Voice Pipeline | `jevon/perception/` (`npu_detector.py`, Whisper STT, TTS audio, terminal error parser) | M1 | PLANNED |
-| M5 | Real-Time Telemetry & Benchmark CLI Suite | `jevon/telemetry/` (nanosecond micro-benchmarks, comparative CLI suite: Mode A, Mode B, Mode C, markdown tables) | M1, M2, M3 | PLANNED |
-| M6 | Final Milestone: E2E Integration & Adversarial Hardening | Phase 1: 100% pass of E2E test suite (Tiers 1-4). Phase 2: Tier 5 adversarial coverage hardening with Challengers. | M1, M2, M3, M4, M5, TEST_READY | PLANNED |
+| M1 | Core Decision Engine & Truth-First State | `jevon/decision/` (`DecisionProvider`, `LocalDecisionProvider`, `TypeSafeJevProvider`, `SafetyFallback`, 8 actions, probability distribution) and `jevon/truth_first/` (7-pillar ledger) | none | COMPLETE |
+| M2 | OfficeKitBridge & Dual-Device Telemetry | `jevon/bridge/` (`OfficeKitBridge`, `AdbTunnelTransport`, `SocketTransport`, `IpcTransport`, `StateObservation`, `DecisionCommand`, `ActionReceipt`) | M1 | COMPLETE |
+| M3 | Laptop Action Execution & Verification Engine | `jevon/execution/` (`LaptopActionExecutor`, failsafe bounds, mouse corner, `SafetyGate`) and `jevon/verification/` (`VerificationEngine`, regex, exit code, AST, git diff) + closed loop | M1, M2 | COMPLETE |
+| M4 | On-Device Perception & Voice Pipeline | `jevon/perception/` (`npu_detector.py`, Whisper STT, TTS audio, terminal error parser) | M1 | COMPLETE |
+| M5 | Real-Time Telemetry & Benchmark CLI Suite | `jevon/telemetry/` (nanosecond micro-benchmarks, comparative CLI suite: Mode A, Mode B, Mode C, markdown tables) | M1, M2, M3 | COMPLETE |
+| M6 | Final Milestone: E2E Integration & Adversarial Hardening | Phase 1: 100% pass of E2E test suite (Tiers 1-4). Phase 2: Tier 5 adversarial coverage hardening with Challengers. (525 total passing tests: 299 unit/adversarial + 226 E2E). | M1, M2, M3, M4, M5, TEST_READY | COMPLETE |
 
 ---
 

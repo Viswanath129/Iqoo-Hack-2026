@@ -143,7 +143,8 @@ class SafetyFallback(DecisionProvider):
 
         # Check 1: Single-action stagnation (e.g. A -> A -> A)
         is_stagnation = (
-            len(recent_actions) >= effective_threshold
+            len(self._history) >= 1
+            and len(recent_actions) >= effective_threshold
             and len(set(recent_actions)) == 1
         )
 

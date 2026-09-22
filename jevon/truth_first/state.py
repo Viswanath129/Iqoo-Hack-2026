@@ -171,6 +171,45 @@ class TruthFirstState:
         if signature:
             self.record_failure_signature(signature)
 
+    def record_failure(
+        self,
+        cycle: int = 0,
+        approach: str = "",
+        reason: str = "",
+        exit_code: int = 1,
+        signature: str | None = None,
+        **kwargs: Any,
+    ) -> None:
+        """Record an unsuccessful execution attempt (alias for add_failed_approach)."""
+        sig = signature or (f"exit_{exit_code}" if exit_code else None)
+        self.add_failed_approach(
+            approach={"approach": approach, "cycle": cycle, "exit_code": exit_code},
+            reason=reason,
+            signature=sig,
+        )
+
+    def append_decision(
+        self,
+        action: Any,
+        rationale: str = "",
+        params: dict[str, Any] | None = None,
+        probs: dict[str, float] | None = None,
+        **kwargs: Any,
+    ) -> None:
+        """Append a decision to the audit ledger (alias for record_decision)."""
+        entry_params = dict(params or {})
+        if probs:
+            entry_params["probabilities"] = probs
+        self.record_decision(decision=action, parameters=entry_params, reasoning=rationale)
+
+    def append_fact(self, fact: str) -> None:
+        """Record an empirically verified observation (alias for add_fact)."""
+        self.add_fact(fact)
+
+    def append_evidence(self, evidence: str) -> None:
+        """Add verbatim snippet or log excerpt (alias for add_evidence)."""
+        self.add_evidence(evidence)
+
     def record_failure_signature(self, signature: str) -> None:
         """Record a failure state signature in sequential history."""
         if signature:
@@ -199,10 +238,11 @@ class TruthFirstState:
             return True
 
         # 3. 3-cycle periodic oscillation (A -> B -> C -> A -> B -> C)
-        if len(actions) >= 6 and actions[-6:] == actions[-3:] * 2 and len(set(actions[-3:])) == 3:
-            return True
-
-        return False
+        return bool(
+            len(actions) >= 6
+            and actions[-6:] == actions[-3:] * 2
+            and len(set(actions[-3:])) == 3
+        )
 
     # --- Serialization ---
     def to_dict(self) -> dict[str, Any]:

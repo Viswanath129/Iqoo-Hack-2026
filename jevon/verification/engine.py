@@ -7,8 +7,8 @@ without self-certification.
 from __future__ import annotations
 
 import ast
-from dataclasses import dataclass, field
 import re
+from dataclasses import dataclass, field
 from typing import Any
 
 

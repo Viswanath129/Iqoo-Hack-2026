@@ -17,14 +17,14 @@ Supports three operating roles:
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 import logging
 import time
-from typing import Any, Callable
+from collections.abc import Callable
+from dataclasses import dataclass, field
 
 from jevon.bridge.bridge import OfficeKitBridge
 from jevon.bridge.protocol import ActionReceipt, DecisionCommand
-from jevon.bridge.transports import BridgeTransport, IpcTransport
+from jevon.bridge.transports import IpcTransport
 from jevon.decision.actions import DeveloperAction, DeveloperDecision
 from jevon.decision.local_provider import LocalDecisionProvider
 from jevon.decision.provider import DecisionProvider, StateObservation
@@ -87,7 +87,6 @@ class ClosedLoopOrchestrator:
         try:
             while step < self.max_steps:
                 step_metrics = MicroBenchmarkMetrics()
-                t_loop_start = time.perf_counter_ns()
 
                 # Stage 1: Local Inference & Decision on Phone
                 t0 = time.perf_counter_ns()

@@ -11,8 +11,8 @@ Zero fabricated or unverified NPU claims.
 from __future__ import annotations
 
 import importlib.util
-from pathlib import Path
 import sys
+from pathlib import Path
 
 
 class NpuDetector:
@@ -34,7 +34,7 @@ class NpuDetector:
         except Exception:
             qnn_installed = False
 
-        if qnn_installed and qnn_path.exists():
+        if sys.platform == "win32" and qnn_installed and qnn_path.exists():
             return cls.TIER_QUALCOMM_NPU
 
         # Tier 2: Check for standard CPU onnxruntime

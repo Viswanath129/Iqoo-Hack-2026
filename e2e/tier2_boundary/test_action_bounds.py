@@ -248,7 +248,7 @@ class TestFeature5SafetyFallbackBoundaries(unittest.TestCase):
         self.assertEqual(dec.action, DeveloperAction.REQUEST_CONFIRMATION)
 
     def test_b5_safety_fallback_oscillation_threshold_1(self) -> None:
-        # Threshold of 1 means even the very first action triggers loop guard
+        # Threshold of 1: first action succeeds, second repeated action triggers loop guard
         mock_provider = MagicMock(spec=DecisionProvider)
         mock_provider.name = "MockThresh1"
         mock_provider.is_available.return_value = True
@@ -257,8 +257,10 @@ class TestFeature5SafetyFallbackBoundaries(unittest.TestCase):
             confidence=0.9,
         )
         safe = SafetyFallback(wrapped_provider=mock_provider, oscillation_threshold=1)
-        dec = safe.decide(TruthFirstState(), StateObservation())
-        self.assertEqual(dec.action, DeveloperAction.REQUEST_CONFIRMATION)
+        d1 = safe.decide(TruthFirstState(), StateObservation())
+        self.assertEqual(d1.action, DeveloperAction.RERUN_BUILD)
+        d2 = safe.decide(TruthFirstState(), StateObservation())
+        self.assertEqual(d2.action, DeveloperAction.REQUEST_CONFIRMATION)
 
     def test_b5_safety_fallback_done_never_oscillates(self) -> None:
         mock_provider = MagicMock(spec=DecisionProvider)

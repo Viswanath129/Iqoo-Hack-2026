@@ -3,12 +3,10 @@
 from __future__ import annotations
 
 import argparse
-import sys
 import time
 
 from jevon.bridge.bridge import OfficeKitBridge
 from jevon.bridge.transports import AdbTunnelTransport, IpcTransport, SocketTransport
-from jevon.decision.actions import DeveloperAction
 from jevon.decision.local_provider import LocalDecisionProvider
 from jevon.decision.provider import StateObservation
 from jevon.decision.safety_fallback import SafetyFallback

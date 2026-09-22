@@ -8,12 +8,10 @@ Supports:
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 import queue
-import socket
 import threading
 import time
-from typing import Any
+from abc import ABC, abstractmethod
 
 
 class BridgeTransport(ABC):

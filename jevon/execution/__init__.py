@@ -11,7 +11,7 @@ from jevon.execution.safety_gate import SafetyGate
 __all__ = [
     "ABORT_CORNER_PX",
     "ALLOWED_COMMAND_PREFIXES",
-    "LaptopActionExecutor",
     "STEP_TIMEOUT_SECONDS",
+    "LaptopActionExecutor",
     "SafetyGate",
 ]

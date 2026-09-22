@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, ClassVar
 
 
 class ComparativeBenchmark:
     """Comparative benchmark suite contrasting Mode A, Mode B, and Mode C."""
 
-    MODES = {
+    MODES: ClassVar[dict[str, Any]] = {
         "Mode A": {"name": "Local-Only (iQOO NPU + Local FSM)", "cloud_cost_per_step": 0.0, "latency_ms": 12.4},
         "Mode B": {"name": "Cloud Baseline (Claude/GPT-4o)", "cloud_cost_per_step": 0.045, "latency_ms": 1450.0},
         "Mode C": {"name": "Hybrid (Local Triage + Cloud Escalation)", "cloud_cost_per_step": 0.009, "latency_ms": 28.5},

@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # ==============================================================================
-# ARGUS: iQOO 15 (Snapdragon 8 Elite Gen 5) On-Device Environment Setup
+# JEVON: iQOO 15 (Snapdragon 8 Elite Gen 5) On-Device Environment Setup
 # Run inside Termux on the loaner phone
 # ==============================================================================
 
 set -e
 
 echo "======================================================================"
-echo "  ARGUS — On-Device AI Developer Testing Agent"
+echo "  JEVON — On-Device Developer Decision Engine"
 echo "  iQOO 15 / Snapdragon 8 Elite Gen 5 Hexagon NPU"
 echo "======================================================================"
 
@@ -38,7 +38,7 @@ pip install \
 # Optional local SLM / ONNX packages
 pip install huggingface-hub || true
 
-# 3. Setup self-ADB wireless connection
+# 3. Setup self-ADB wireless connection or USB bridge
 echo "[3/6] Configuring Wireless ADB Loopback on iQOO 15..."
 echo "NOTE: Make sure 'Wireless Debugging' is ENABLED in Developer Options!"
 echo "If connected via USB during check-in, run 'adb tcpip 5555' once from PC."
@@ -50,7 +50,7 @@ echo "[4/6] Setting up project directories..."
 mkdir -p ~/models/qwen2.5-0.5b
 mkdir -p ~/models/whisper-small
 mkdir -p ~/runs
-mkdir -p /sdcard/argus/reports || true
+mkdir -p /sdcard/jevon/reports || true
 
 # 5. Download On-Device Quantized SLM (Qwen 2.5 0.5B INT4)
 echo "[5/6] Checking AI Models..."
@@ -71,16 +71,16 @@ fi
 echo "[6/6] Writing environment variables to ~/.bashrc..."
 cat << 'EOF' >> ~/.bashrc
 
-# Argus Environment Settings
-export ARGUS_TARGET=android
-export ARGUS_SLM_GGUF=$HOME/models/qwen2.5-0.5b/qwen2.5-0.5b-instruct-q4_k_m.gguf
-export ARGUS_SLM_MODEL_DIR=$HOME/models/qwen2.5-0.5b
+# JEVON Environment Settings
+export JEVON_ROLE=phone
+export JEVON_SLM_GGUF=$HOME/models/qwen2.5-0.5b/qwen2.5-0.5b-instruct-q4_k_m.gguf
+export JEVON_SLM_MODEL_DIR=$HOME/models/qwen2.5-0.5b
 export PYTHONPATH=$HOME/viswa_jav:$PYTHONPATH
 
-alias argus="python -m typesafe_computer_use.cli --target android --act --speak"
-alias argus-demo="python -m hackathon.demo"
+alias jevon="python -m jevon"
+alias jevon-demo="python -m hackathon.demo"
 EOF
 
 echo "======================================================================"
-echo "  ✓ Setup complete! Launch with: argus \"test the login flow\""
+echo "  ✓ Setup complete! Launch with: jevon \"Fix failing build\""
 echo "======================================================================"

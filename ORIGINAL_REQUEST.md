@@ -31,24 +31,24 @@ Instrument every phase with real micro-benchmarks: perception latency, local inf
 ## Acceptance Criteria
 
 ### Core Decision & Bounded Actions
-- [ ] `DecisionProvider` interface implemented with `LocalDecisionProvider` functioning offline with zero API keys.
-- [ ] Action space restricted to <=8 bounded, mutually exclusive developer actions.
-- [ ] Decisions output typed confidence scores and probability distributions.
+- [x] `DecisionProvider` interface implemented with `LocalDecisionProvider` functioning offline with zero API keys.
+- [x] Action space restricted to <=8 bounded, mutually exclusive developer actions.
+- [x] Decisions output typed confidence scores and probability distributions.
 
 ### Bridge & Office Kit
-- [ ] Bi-directional protocol implemented and verified with simulated or live Office Kit socket transport.
-- [ ] End-to-end round trip (State -> Phone Decision -> Laptop Action -> Verified Receipt) executes reliably.
+- [x] Bi-directional protocol implemented and verified with simulated or live Office Kit socket transport.
+- [x] End-to-end round trip (State -> Phone Decision -> Laptop Action -> Verified Receipt) executes reliably.
 
 ### Developer Workflow (Build/Test/Debug MVP)
-- [ ] Fully automated diagnosis and targeted test/build execution demonstrated on a reproducible failed build fixture.
-- [ ] Destructive actions (`git reset --hard`, file deletion, credential access) blocked by `SafetyGate` until confirmed.
+- [x] Fully automated diagnosis and targeted test/build execution demonstrated on a reproducible failed build fixture.
+- [x] Destructive actions (`git reset --hard`, file deletion, credential access) blocked by `SafetyGate` until confirmed.
 
 ### Verification & Truth-First Tracking
-- [ ] Independent verification logic asserts process exit codes and error elimination, halting on unrecovered failures.
-- [ ] Truth-First state model records and logs facts, hypotheses, and evidence at each step.
+- [x] Independent verification logic asserts process exit codes and error elimination, halting on unrecovered failures.
+- [x] Truth-First state model records and logs facts, hypotheses, and evidence at each step.
 
 ### Benchmarking & Honesty
-- [ ] Benchmark CLI produces empirical latency tables for all pipeline stages.
-- [ ] No unmeasured or simulated NPU/hardware claims in outputs or documentation.
-- [ ] Existing 170 unit tests pass without regression.
+- [x] Benchmark CLI produces empirical latency tables for all pipeline stages.
+- [x] No unmeasured or simulated NPU/hardware claims in outputs or documentation.
+- [x] Existing 170 unit tests pass without regression.
 </USER_REQUEST>

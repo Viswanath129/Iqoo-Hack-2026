@@ -14,8 +14,6 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import os
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -181,12 +179,9 @@ def main():
     print(f"Model output directory: {args.output}\n", flush=True)
 
     if not args.whisper_only:
-        if args.gguf:
-            qwen_path = download_qwen_gguf(args.output)
-        else:
-            qwen_path = download_qwen_onnx(args.output)
+        qwen_path = download_qwen_gguf(args.output) if args.gguf else download_qwen_onnx(args.output)
         print(f"\n✓ Qwen model ready at: {qwen_path}", flush=True)
-        print(f"  Set ARGUS_SLM_MODEL_DIR={qwen_path} or ARGUS_SLM_GGUF={qwen_path}", flush=True)
+        print(f"  Set JEVON_SLM_MODEL_DIR={qwen_path} or JEVON_SLM_GGUF={qwen_path}", flush=True)
 
     if not args.qwen_only:
         whisper_path = download_whisper(args.output)
