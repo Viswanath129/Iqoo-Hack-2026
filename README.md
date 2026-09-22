@@ -1,305 +1,403 @@
-<p align="center">
-  <img src="docs/banner.svg" alt="typesafe-computer-use" width="100%">
-</p>
+# JEVON
 
-<p align="center">
-  <a href="https://github.com/awlevin/typesafe-computer-use/actions/workflows/ci.yaml"><img alt="CI" src="https://github.com/awlevin/typesafe-computer-use/actions/workflows/ci.yaml/badge.svg"></a>
-  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
-  <img alt="Python 3.12+" src="https://img.shields.io/badge/python-3.12%2B-3776AB?logo=python&logoColor=white">
-  <img alt="macOS" src="https://img.shields.io/badge/platform-macOS-000000?logo=apple&logoColor=white">
-  <a href="https://docs.typesafe.ai"><img alt="TypeSafe" src="https://img.shields.io/badge/decisions-TypeSafe%20jev-8b5cf6"></a>
-  <a href="https://github.com/astral-sh/ruff"><img alt="Ruff" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json"></a>
-</p>
+### On-Device Developer Decision Engine
 
-**typesafe-computer-use** drives a Mac toward a goal you type in plain English, for about a
-fiftieth of a cent per step. It never sends a screenshot to a big model. Instead it
-reads the screen deterministically, asks a small classifier which action comes next,
-and only calls a writing model when a text field genuinely needs free text.
+> **From developer intent to verified action.**
 
-```
-clicker "go to techcrunch and take me to the checkout page for the cheapest tickets to their next upcoming event" --act
-```
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Platform Windows](https://img.shields.io/badge/platform-Windows%2011-0078D6?logo=windows&logoColor=white)](https://microsoft.com)
+[![Platform macOS](https://img.shields.io/badge/platform-macOS-000000?logo=apple&logoColor=white)](https://apple.com)
+[![Platform Android](https://img.shields.io/badge/platform-Android%20(ADB)-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Why
+**JEVON** is an on-device developer decision and automation engine. Rather than functioning as a conversational chatbot that generates hypothetical code snippets, JEVON treats the developer environment as an observable, closed-loop control system. It deterministically perceives your screen, active windows, accessibility hierarchy, and compiler outputs; selects the next concrete developer action from a bounded decision space; executes it directly on your machine; and independently verifies the outcome before deciding the next step.
 
-Frontier-model computer use is capable and expensive: every step ships a screenshot and
-waits several seconds for a plan. Most steps do not need a plan. They need one choice
-from a short list, made quickly and cheaply, with a confidence number you can gate on.
+---
 
-[TypeSafe](https://docs.typesafe.ai) sells exactly that: a decision model that answers
-a `Choice` over up to 255 options with a full probability distribution and a calibrated
-confidence, in a few hundred milliseconds, with free output tokens. This project is a
-computer-use loop built around it.
+## Table of Contents
 
-Measured on the same screenshot and goal, one decision each:
+- [Why JEVON?](#why-jevon)
+- [The Core Idea](#the-core-idea)
+- [Architecture](#architecture)
+- [What Works Today (Repository Audit)](#what-works-today-repository-audit)
+- [Hardware & Runtime Support](#hardware--runtime-support)
+- [Installation & Setup](#installation--setup)
+- [Usage & CLI Reference](#usage--cli-reference)
+- [The Decision Loop](#the-decision-loop)
+- [AI Models & Inference Runtimes](#ai-models--inference-runtimes)
+- [Safety & Emergency Controls](#safety--emergency-controls)
+- [Verification & Truth-First Ledger](#verification--truth-first-ledger)
+- [Reproducing Examples](#reproducing-examples)
+- [Known Limitations](#known-limitations)
+- [Roadmap](#roadmap)
+- [Attribution & License](#attribution--license)
+- [Contributing](#contributing)
 
-| | typesafe (jev) | Claude Opus 5, bare screenshot | multiplier |
-|---|---|---|---|
-| input tokens | 4,882 | 4,785 | same |
-| cost per decision | $0.0002 | $0.032 | 155x cheaper |
-| cost per decision, realistic loop with history | $0.0002 | $0.035 to $0.08 | 170x to 390x cheaper |
-| cost per 12-step task | $0.003 | $0.40 to $0.90 | 130x to 300x cheaper |
-| model latency | 0.13 to 0.38 s | 5.2 s | 14x to 40x faster |
-| end-to-end step, with capture and OCR | about 1.5 s | about 5.5 s | 3.7x faster |
+---
 
-The honest caveat: the big model read the event dates off the pixels and compared them
-unaided. The classifier needed the date parsing described below. Every piece of
-reasoning the frontier model does for free has to be rebuilt here as deterministic state.
+## Why JEVON?
 
-## Install
+Traditional developer AI assistants operate in an open-ended conversational loop:
 
-macOS 14 or newer, Python 3.12 or newer, [uv](https://docs.astral.sh/uv/).
-
-```
-git clone https://github.com/awlevin/typesafe-computer-use
-cd typesafe-computer-use
-uv sync
-cp .env.example .env     # fill in the keys
+```text
+Developer Intent  ──>  LLM (Cloud)  ──>  Generated Text / Code Snippet
+                             ▲                       │
+                             │ (Manual copy-paste)   │
+                             └───────────────────────┘
 ```
 
-| variable | required | purpose |
-|---|---|---|
-| `TYPESAFE_API_KEY` | yes | every decision |
-| `ANTHROPIC_API_KEY` | no | `type_text`, writer-proposed URLs, and the final answer |
-| `CLICKER_EMAIL` | no | enables the `type_email` action |
-| `CLICKER_BROWSER` | no | defaults to `Google Chrome` |
-| `CLICKER_WRITER_MODEL` | no | defaults to `claude-haiku-4-5` |
-| `CLICKER_ANSWER_MODEL` | no | reads the last screen for the final answer; defaults to `claude-sonnet-5` |
+This leaves the hardest parts of development entirely to the human: manually copying code, navigating windows, running terminal builds, reading stack traces, and validating that the fix actually resolved the issue.
 
-Grant your terminal **Screen Recording** and **Accessibility** in System Settings >
-Privacy & Security. Without the first, captures are wallpaper. Without the second,
-synthetic clicks are silently dropped, and `--act` refuses to start.
+**JEVON re-architects developer automation as a deterministic control loop:**
 
-## Use
-
-```
-uv run clicker "open the Playground"                 # dry run: one step, prints what it would do
-uv run clicker "open the Playground" --act           # drives the machine, up to 100 steps
-uv run clicker "log in" --act --steps 20 --delay 3   # longer and slower
-uv run clicker-inspect "any goal"                    # 3-2-1, capture, open the annotated screen + payload
+```text
+Developer Intent
+       │
+       ▼
+   Perceive ──> Structured Decision ──> Deterministic Action ──> Observe ──> Verify
+       ▲                                                                       │
+       └───────────────────────── Next Decision ───────────────────────────────┘
 ```
 
-Clear the terminal first. It is on screen, so its text is OCR input.
+### Key Distinctions
 
-**Stopping a live run.** Ctrl-C when the terminal has focus, or slam the mouse into the
-top-left corner of the screen from any app. The loop also stops itself on `done` or
-`none`, on confidence under `--min-confidence` (0.4), after two consecutive no-ops, or
-at `--steps`.
+| Feature | Conventional AI Chatbot | JEVON Decision Engine |
+| :--- | :--- | :--- |
+| **Output Type** | Unstructured markdown / natural language | Typed, machine-executable action with probability distribution |
+| **Action Space** | Infinite, unconstrained text | Bounded, mutually exclusive developer actions |
+| **Inference Boundary** | Heavy cloud API roundtrip (tokens/sec) | On-device SLM / local heuristics / optional cloud fallback |
+| **Execution** | Passive (user must manually copy/paste) | Active native automation (Win32, UIA, ADB, OS shells) |
+| **Verification** | Self-certifying / None | Independent validation (exit codes, regex, test passes, AST) |
+| **Safety** | Prompt-dependent disclaimer | Hardware failsafes (mouse-corner abort, step timeouts, allowlists) |
 
-**The answer.** When the loop stops itself, the writer reads the screen it stopped on
-and prints the result: the information the goal asked for, or where things stand and
-the next step when the screen does not hold it. A dry run that would have acted, and
-an aborted run, print no answer.
+---
 
-## How a step works
+## The Core Idea
 
-```
-screencapture ─► Vision OCR ─► merge lines into blocks ─► drop lines echoing the goal
-accessibility ─► actionable elements (role, label, frame), pruned to the display,
-                 the labelled pressable ones it pruned kept as off-screen controls
-                     │
-                     └─► one numbered list of items, each carrying its source
-                     │
-accessibility ─► focused field (role, label, placeholder, value, frame)
-AppleScript   ─► frontmost app and pid, active tab URL
-clock         ─► local date and time
-dates.py      ─► "dated 2026-10-13 (in 27 days)" on any block containing a date,
-                 "near a line dated ..." on its neighbours
-                     │
-                     ▼
-        one TypeSafe request, three Choices, four with off-screen controls
-        ┌────────────────────────────────────────────────────────────┐
-        │ kind      : click_item | use_browser | type_text | scroll… │
-        │ item      : which item (used only for click_item)          │
-        │ site      : which website (used only for use_browser)      │
-        │ offscreen : which hidden control (only for press_offscreen)│
-        └────────────────────────────────────────────────────────────┘
-                     │
-                     ▼
-        deterministic action ─► wait ─► next step
-```
+JEVON converts high-level developer intent into a verified change through eight explicit pipeline phases:
 
-Items carry where they came from: `ocr` for a text block, `ax` for a control the app
-declared, `ax+ocr` when both found the same thing. An `ax` item reads as
-`button 'Share' (top-right)` in the criteria, so the classifier can tell a real control
-from a line of text.
+1. **Developer Intent:** Spoken via microphone or passed through CLI argument.
+2. **Perception:** Captures screen raster (`mss`), queries OS Accessibility Trees (`UIAutomation` / `AXUIElement` / `ADB dump`), and runs hardware OCR (`WinRT` / `Vision`).
+3. **Decision Core:** An on-device Small Language Model (SLM) or deterministic heuristic classifies the exact next action.
+4. **Typed Action:** Emits a strongly typed command (e.g., `inspect_error`, `run_targeted_test`, `click_item`, `type_text`).
+5. **Deterministic Executor:** Simulates native OS input or runs sandboxed terminal processes.
+6. **Observation:** Captures the updated state (process return code, stdout/stderr, updated UI tree).
+7. **Verification:** Validates whether the expected state transition occurred without self-certification.
+8. **Next Decision:** Advances the 7-pillar Truth-First ledger and triggers the subsequent cycle.
 
-Splitting the decision into three questions keeps screen noise out of the action
-choice. Every stall found while building this came from two options that meant the
-same thing. Confidence measures concentration, so overlapping options always read as
-doubt. Keep the action set mutually exclusive.
+---
 
-### OCR cost
+## Architecture
 
-Vision is about two thirds of a step, and it charges by the amount of text rather than
-the number of pixels, so the only real saving is reading less of the screen.
+```mermaid
+flowchart TB
+    subgraph Input ["1. Developer Intent"]
+        VOICE["Voice Command (Microphone)"]
+        CLI_ARG["CLI Command Line"]
+    end
 
-- **Crop.** Each step reads the frontmost window with an 8 pt margin, plus the menu bar
-  strip over the same columns, clamped to the display. Text on the desktop and in
-  background windows is noise to the decision. Clipping the strip to the window's width is
-  what makes the crop pay on a full-height window. The cost: the clock and the menu extras
-  to the right of the window go unread. They stay clickable through the accessibility tree.
-- **Reuse.** The capture is compared with the previous one at 1/8 scale, in 256 px tiles.
-  Unchanged tiles keep the lines they produced last step. The changed tiles are clustered
-  into blobs, sides and corners counting as touching, and each blob becomes a rectangle
-  read on its own. Scattered change is the ordinary case, a clock digit plus one repaint,
-  and one rectangle around both would span the display. Each rectangle grows until no known
-  line straddles its edge, because a crop through a line returns the half it can see; ones
-  that meet after growing merge, and more than four merge by closest pair down to four.
-  Past 60% changed tiles, past 60% of the region in summed rectangle area, or on an app
-  switch or a window move, the whole region is read instead.
+    subgraph Perception ["2. Perception Engine"]
+        STT["Whisper STT (Hexagon NPU / CPU)"]
+        UIA["Accessibility Tree (Win32 UIA / macOS AX / Android)"]
+        OCR["Hardware OCR (WinRT / Apple Vision)"]
+        SCREEN["DPI-Aware Capture (mss)"]
+    end
 
-The timing line says how much was read, and in how many pieces: `ocr 0.31s (22% of screen,
-2 rects)`. A replay (`--image`) always reads the whole image and never reuses, so an offline
-repro matches the original run.
+    subgraph DecisionCore ["3. Decision Core"]
+        SLM["On-Device SLM (Qwen2.5 ONNX / GGUF)"]
+        LOCAL_FSM["Zero-Cloud Rule Heuristic"]
+        CLOUD_JEV["Optional TypeSafe JEV Provider"]
+        SAFETY_FB["Safety Fallback (< 0.60 Conf / Loops)"]
+        LEDGER["7-Pillar Truth-First State Ledger"]
+    end
 
-### Accessibility tree
+    subgraph Execution ["4. Deterministic Executor"]
+        WIN_EXEC["Windows (Win32 SendInput & UIA)"]
+        MAC_EXEC["macOS (AppleScript & Quartz)"]
+        AND_EXEC["Android (ADB Shell Input & Keyevents)"]
+        SUBPROC["Isolated Subprocess Runner"]
+    end
 
-OCR cannot see an icon. The accessibility tree can, so each step also walks the frontmost
-process for labelled, on-screen controls. Coverage is uneven, measured on ten apps on one
-Mac: Finder 100% of on-screen controls labelled, Chrome 88%, Slack 85%, Notion 68%,
-Spotify 0 (its CEF shell exposes three window buttons and nothing else). Terminals expose
-the grid as one text area. So AX is a bonus source, never a replacement.
+    subgraph Safety ["Safety Layer"]
+        CORNER["Emergency Mouse Corner Abort (0,0)"]
+        TIMEOUT["Step Timeouts (30s)"]
+        ALLOW["Command & Path Allowlist"]
+    end
 
-Labels live in `AXDescription` for web and Electron, `AXTitle` for AppKit, and a short
-`AXValue` otherwise. A decorative image takes the label of the control around it; a list
-row takes it from a shallow `AXStaticText`.
+    subgraph Verification ["5. Verification & Feedback"]
+        VERIF["Independent Verifier (Exit Code / Regex / AST)"]
+        TTS["On-Device TTS Feedback (WinRT / SAPI / macOS)"]
+    end
 
-Frames lie, so the walk prunes hard:
-
-- skip any subtree whose real frame misses the display (Notes reports rows 200 screens
-  down, Chrome parks scrolled-out nodes above the viewport)
-- skip any node under 4 pt wide or tall (Chromium clamps scrolled-out web nodes to slivers)
-- skip `AXMenu` subtrees, which are thousands of zero-sized items behind a closed menu
-- skip nameless `AXGroup` layout boxes, even pressable ones
-- stop at 4000 nodes or 0.6 s and say so
-
-Walks measured here: Finder 152 controls in 0.08 s, Chrome 172 in 0.59 s. The assistive
-handshake attributes (`AXManualAccessibility`, `AXEnhancedUserInterface`) are unsupported
-on this macOS, so nothing relies on them.
-
-#### Off-screen controls
-
-`AXPress` does not need an element to be visible. Notes selects a row parked thousands of
-points below the display, Chromium delivers a click to a link it clamped to a 1 px sliver
-because the page is scrolled past it, and an auto-hidden Dock hands over all 37 of its
-items from 5 pt below the bottom edge. So the same walk keeps the labelled, pressable nodes
-it pruned, and offers them as a separate capped list rather than mixing them into the items:
-nothing on the capture points at them, and a mouse click would land somewhere else entirely.
-
-The list is deduplicated by role and label, drops any label the visible items already carry,
-and stops at 120 controls, after which those subtrees are pruned as before, so the walk costs
-what it always did. It is offered only when it is not empty, as a `press_offscreen` action
-plus an `offscreen` question, and the step log counts it next to `ax=`. A refusal is the end
-of it: there is no pixel to fall back on, so it reads as a no-op. What a walk finds depends
-on the app, and the node and time caps bind first on a big tree: Notes and Chrome spend all
-4000 nodes on what is already on screen and report nothing hidden.
-
-### Action space
-
-| key | does |
-|---|---|
-| `click_item` | press the element through the accessibility tree when the item came from it, so the press lands on the control rather than on whatever covers it; a mouse click at the center of the box otherwise, and as the fallback when the press is refused |
-| `press_offscreen` | `AXPress` a labelled control the app exposes but does not show, chosen from the off-screen list; offered only when that list is not empty, and a refusal counts as a no-op since there is no pixel to fall back on |
-| `use_browser` | go to the browser, showing the website the `site` answer names: `none` brings it forward on the page already open there, a `SITES` catalog key opens that URL through AppleScript `open location`, and `other` opens a URL the writer proposes |
-| `type_text` | the writer composes the string; it is set on the focused element through the accessibility tree, with keystrokes as the fallback when the value does not read back, and a TypeSafe Noul then checks the field's value |
-| `type_email` | fills in `$CLICKER_EMAIL` the same way; refused unless a text field is focused |
-| `press_enter`, `press_escape` | keyboard |
-| `scroll_down`, `scroll_up` | 10 lines, after parking the cursor over the frontmost window |
-| `wait` | screen still loading |
-| `done`, `none` | stop |
-
-### Where free text comes from
-
-The classifier never generates text. The writer model runs in three places, each with a
-small packet and a structured reply:
-
-- **`type_text`** receives the goal, recent actions, the focused field's label and
-  placeholder, and the OCR lines near the field. It returns `{fill, text}`. Credential
-  fields come back `fill: false` and nothing is typed. After typing, a Noul scores
-  whether the field now holds a sensible value. Under 0.5 the field is cleared.
-- **`use_browser`** with `site: other` receives the goal and returns `{ok, url}`.
-  Code rejects anything that is not a clean https URL with a hostname.
-- **The answer**, once, when the loop stops itself. It receives the goal, every action
-  taken, why the run stopped, the text of the last screen, and the capture itself,
-  because OCR misreads a letter here and there and drops layout. It returns
-  `{achieved, answer}`, and is told to take the answer from the screen alone. When an
-  action ran after the last capture, the screen is captured again first. This one
-  call uses `CLICKER_ANSWER_MODEL`, a stronger reader than the per-step writer.
-
-Passwords are never typed. Rely on the browser's password manager or an SSO button
-the OCR can read.
-
-## Run folder
-
-Every run writes `runs/<timestamp>/` so a stall can be replayed and fixed offline:
-
-| file | contents |
-|---|---|
-| `run.log`, `run.json` | everything printed; goal, outcome (`done`, `nothing helps`, `low confidence`, `stalled`, `step limit`, `dry run`, `aborted`, `crashed`), `answer` and `goal_achieved`, seconds, every action, config, and `timing` (mean and max seconds per phase, with `steps_timed`) |
-| `answer-raw.png` | the capture the answer was read from, when an action made the last step's capture stale |
-| `step-NNN-raw.png` | the capture |
-| `step-NNN.png` | items numbered in blue, accessibility ones orange, the chosen one red, the focused field green |
-| `step-NNN-payload.txt` | the exact `state` and criteria sent to TypeSafe, then every item with source, role, box, click point, confidence, then the off-screen controls |
-| `step-NNN-answers.json` | every probability the classifier returned, the off-screen controls it was offered, plus `timing` for that step |
-
-Each step also logs what it cost, so a slow phase is obvious:
-
-```
-  timing: capture 0.31s  screenshot 0.28s  app 0.01s  window 0.02s  field 0.01s  url 0.01s  ocr 0.31s (22% of screen)  ax 0.06s  decide 0.21s  act 0.05s  total 0.95s
+    VOICE --> STT --> Perception
+    CLI_ARG --> Perception
+    Perception --> DecisionCore
+    DecisionCore --> Safety --> Execution
+    Execution --> Verification
+    Verification -->|"Updated State & Facts"| LEDGER
+    LEDGER -->|"Next Step"| DecisionCore
+    Verification --> TTS
 ```
 
-`capture` covers the four round trips under it; `act` is left out when the step did not act.
+---
 
-Replay a saved capture as if it were live, without touching the screen:
+## What Works Today (Repository Audit)
 
+To adhere strictly to truth-first documentation, every capability in this repository is audited and classified below:
+
+| Component / Subsystem | Implementation Status | Implementation Details |
+| :--- | :---: | :--- |
+| **Cross-Platform Adapter** | `VERIFIED` | `platform_adapter.py` dynamically routes to Windows, macOS, or Android (via ADB) |
+| **Windows Desktop Automation** | `VERIFIED` | `windows.py`: Multi-monitor `mss` capture, COM `uiautomation` tree parsing, Win32 `SendInput` mouse/keyboard |
+| **Hardware-Accelerated OCR** | `VERIFIED` | `ocr.py`: Windows WinRT OCR with changed-tile bounding box caching (`_TileCache`) |
+| **Emergency Mouse Corner Stop** | `VERIFIED` | `actions.py`: Hard abort triggers if mouse moves to `(0, 0)` within `ABORT_CORNER_PX = 10` |
+| **Rule-Based Local Decision** | `VERIFIED` | `decide.py` (`decide_local`): Offline keyword and control matching heuristic with 0 API keys |
+| **SLM On-Device Decision** | `VERIFIED` | `slm_decide.py`: Multi-backend runner supporting ONNX GenAI, llama.cpp GGUF, and local REST |
+| **Truth-First State Ledger** | `VERIFIED` | `jevon/truth_first/state.py`: 7-pillar append-only state model with deterministic failure signatures |
+| **8-Action Developer Space** | `VERIFIED` | `jevon/decision/actions.py`: Strict `DeveloperAction` enum with normalized probability distributions |
+| **Android ADB Control** | `VERIFIED` | `android.py`: Touch inputs, keyevents, text typing, app launching, and XML hierarchy dumping |
+| **TTS Speech Synthesis** | `VERIFIED` | `speech.py`: Asynchronous on-device TTS via `winsdk` SpeechSynthesizer or macOS `say` |
+| **Whisper NPU Integration** | `EXPERIMENTAL` | `whisper_npu.py`: Qualcomm Snapdragon X Hexagon NPU QNN provider loader with REST fallback |
+| **Office Kit Socket Bridge** | `PLANNED` | Protocol interfaces designed; binary socket framing currently under development |
+| **Independent AST Verifier** | `PLANNED` | Contract defined in `PROJECT.md`; basic exit-code and regex validation verified |
+
+---
+
+## Hardware & Runtime Support
+
+| Platform | Primary Subsystems | Acceleration | Status |
+| :--- | :--- | :--- | :--- |
+| **Windows 11 (x64 / ARM64)** | Win32 API, UIAutomation, WinRT OCR, `mss` | Direct3D / WinRT GPU OCR | **Fully Supported** |
+| **Qualcomm Snapdragon X (Copilot+)** | On-Device SLM (ONNX GenAI), Distil-Whisper | Qualcomm Hexagon NPU (45 TOPS) | **Experimental** |
+| **macOS (Apple Silicon / Intel)** | PyObjC, Quartz, Apple Vision OCR, AppleScript | Apple Neural Engine / Metal | **Fully Supported** |
+| **Android (via ADB)** | ADB input, screencap, uiautomator dump | Host-side inference | **Supported via Host** |
+
+---
+
+## Installation & Setup
+
+### Prerequisites
+
+- **Python:** Version 3.11 or 3.12 (Python 3.13 not yet fully supported by binary wheels).
+- **Package Manager:** `uv` (recommended) or standard `pip`.
+- **Operating System:** Windows 10/11, macOS 13+, or Linux (host controller for Android).
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/Viswanath129/Iqoo-Hack-2026.git
+cd Iqoo-Hack-2026
 ```
-uv run clicker "same goal" --image runs/<ts>/step-003-raw.png --app "Google Chrome" --url "https://example.com/"
+
+### 2. Environment Setup
+
+Using `uv` (fastest):
+
+```bash
+# Create virtual environment
+uv venv --python 3.11
+
+# Windows activate
+.venv\Scripts\activate
+
+# Install dependencies
+uv pip install -e .
 ```
 
-## Layout
+Using standard `pip`:
 
-```
-typesafe_computer_use/
-  macos.py        the only module that touches Quartz, AX, AppleScript   (platform adapter)
-                  including the bounded walk for actionable elements
-  perception.py   capture, OCR, the read region and the changed-tile cache,
-                  block merging, goal-echo filter, the accessibility item
-                  source, and the merge of the two
-  dates.py        date parsing and "in N days" hints
-  decide.py       state, criteria, the three-Choice request, the Noul check
-  writer.py       the writer model, structured replies, URL validation, the final answer
-  actions.py      one handler per action, each returning a history line
-  runner.py       the step loop, run folder, stop rules, the hand-off for the answer
-  report.py       logging, annotated screenshots, payload dump
-  timing.py       phase stopwatches, the timing line, run summary
-  cli.py          `clicker` and `clicker-inspect`
-tests/            pure logic: dates, merging, reading order, echo filter, config,
-                  decisions, the tree walk against a fake tree
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -e .
 ```
 
-A Linux port replaces `macos.py` with xdotool and AT-SPI, and swaps Vision OCR for
-PaddleOCR or RapidOCR. The tree walk itself takes its children, attributes, and actions
-as callables, so only those three bindings change. Nothing else knows the platform.
+### 3. (Optional) On-Device SLM Models
 
-## Known limits
+To download the local quantized SLM models for zero-cloud decision inference:
 
-- OCR only sees text, and the accessibility tree only covers apps that publish one.
-  In a terminal, a canvas, or Spotify, an icon-only button reaches neither source.
-- Two identical labels get only a coarse region hint and split the vote.
-- Only the main display is captured.
-- Using the machine during an `--act` run fights it for focus and the cursor.
-- The site catalog is small on purpose; the writer covers the rest.
-
-## Development
-
-```
-uv run ruff check . && uv run ruff format --check .
-uv run pytest -q
+```bash
+python hackathon/download_models.py --format gguf
+# or
+python hackathon/download_models.py --format onnx
 ```
 
-CI runs the same on macOS. See [CONTRIBUTING.md](CONTRIBUTING.md).
+---
 
-## License
+## Usage & CLI Reference
 
-[MIT](LICENSE)
+JEVON provides the `clicker` command-line utility.
+
+### Basic Modes
+
+#### 1. Dry Run / Inspection (Perceive Screen Only)
+Inspects the active window, dumps the accessibility hierarchy, and highlights interactive elements without clicking:
+```bash
+clicker "open calculator and compute 42 * 2"
+```
+
+#### 2. Live Action Execution (`--act`)
+Enables native keyboard and mouse interaction:
+```bash
+clicker "open calculator and compute 42 * 2" --act
+```
+
+#### 3. Fully Offline Decision Engine (`--local` or `--model local`)
+Forces execution without any external cloud API keys using deterministic heuristics:
+```bash
+clicker "launch notepad and write build report" --act --local
+```
+
+#### 4. On-Device SLM Decision (`--model slm`)
+Routes decisions through the local on-device SLM:
+```bash
+clicker "search for error in terminal" --act --model slm
+```
+
+#### 5. Hands-Free Voice Control (`--voice` & `--speak`)
+Listens to voice commands via microphone (STT) and reads responses aloud (TTS):
+```bash
+# Via CLI flag
+clicker --voice --speak --act
+
+# Or launch the automated batch runner on Windows
+run_voice.bat
+```
+
+#### 6. Target Android Device (`--target android`)
+Dispatches perceived actions to a connected Android phone or emulator via ADB:
+```bash
+clicker "open Settings and tap Display" --act --target android
+```
+
+---
+
+## The Decision Loop
+
+Every cycle follows a strict six-step state machine:
+
+```text
+[ Developer Intent ]
+         │
+         ▼
+ 1. SENSE SCREEN ───────> mss raster capture + UIAutomation XML + WinRT OCR
+         │
+         ▼
+ 2. BUILD PROMPT ───────> Index interactive controls [0..N], active focus, recent history
+         │
+         ▼
+ 3. SELECT ACTION ──────> SLM / Local FSM outputs typed action, target item, & confidence
+         │
+         ▼
+ 4. SAFETY CHECK ───────> Verify coordinates != (0,0), action in allowlist, step < 100
+         │
+         ▼
+ 5. EXECUTE ────────────> Native Win32 SendInput / ADB input tap / Shell subprocess
+         │
+         ▼
+ 6. VERIFY & RECORD ────> Evaluate process exit code, regex matching, log to 7-pillar ledger
+```
+
+---
+
+## AI Models & Inference Runtimes
+
+JEVON is built to minimize cloud dependence by deploying efficient on-device models:
+
+| Task | Supported Model / Engine | Runtime Provider | Hardware Target |
+| :--- | :--- | :--- | :--- |
+| **Decision Intelligence** | Qwen 2.5 (0.5B / 1.5B Instruct) | `onnxruntime-genai` / `llama-cpp-python` | Snapdragon Hexagon NPU / CPU |
+| **Heuristic Fallback** | Deterministic FSM (`decide_local`) | Pure Python (0 parameters) | Any CPU |
+| **Speech-to-Text (STT)** | Distil-Whisper / Whisper-Small | QNN Execution Provider / REST | Qualcomm NPU / Host CPU |
+| **Text-to-Speech (TTS)** | Windows Media Speech Synthesis | Native `winsdk` COM API | Windows Audio Subsystem |
+| **OCR Perception** | WinRT Hardware OCR | Windows Imaging API (`Direct3D`) | Integrated / Discrete GPU |
+
+---
+
+## Safety & Emergency Controls
+
+Desktop automation requires rigorous safety boundaries to prevent runaway execution:
+
+1. **Emergency Mouse-Corner Stop:** If the mouse pointer is moved into the top-left corner of any display (`x <= 10` and `y <= 10`), JEVON immediately raises an `Abort` exception and halts all inputs.
+2. **Step Limits:** Default step limit is bounded to 100 steps per task session to avoid infinite loops.
+3. **Safety Fallback Interceptor:** Decisions returning a confidence score `< 0.60` or detecting identical repeated states trigger `SafetyFallback`, preventing repetitive clicking.
+4. **Isolated Subprocesses:** Shell execution commands run with timeouts and strict output buffering.
+
+---
+
+## Verification & Truth-First Ledger
+
+JEVON tracks decision state using an immutable, append-only **7-Pillar Ledger** (`TruthFirstState`):
+
+1. **GOAL:** The developer's primary objective.
+2. **CONSTRAINTS:** Operational invariants and safety allowlists.
+3. **FACTS:** Empirically verified truths from OS observations.
+4. **DECISIONS:** Chronological record of actions chosen with rationale.
+5. **EVIDENCE:** Verbatim compiler errors, diffs, and return codes.
+6. **OPEN_QUESTIONS:** Active diagnostic hypotheses under test.
+7. **FAILED_APPROACHES:** Disproven attempts and their failure signatures.
+
+### Failure Signatures
+Failure states generate a deterministic 16-character SHA-256 signature combining exit code, culprit filename, and error summary to instantly identify regression loops.
+
+---
+
+## Reproducing Examples
+
+### Example 1: Local Offline Intent Execution
+Run a local desktop task without cloud access:
+```bash
+clicker "open notepad" --act --local
+```
+**Expected outcome:** JEVON inspects active processes, determines Notepad is not running, launches `notepad.exe` via Win32 ShellExecute, perceives the new window, and issues `done`.
+
+### Example 2: Inspecting Terminal Errors
+Run a dry-run perception step across an active terminal session:
+```bash
+clicker-inspect
+```
+**Expected outcome:** Emits an indexed list of visible controls, window titles, and detected text snippets saved to the `inspections/` directory.
+
+---
+
+## Known Limitations
+
+- **Display Scaling & Multi-DPI:** On multi-monitor setups with mismatched DPI scaling factors (e.g., 150% on laptop, 100% on external monitor), Win32 coordinate offsets can experience minor alignment drift.
+- **NPU Model Compilation:** Snapdragon X NPU acceleration requires pre-compiled QNN model binaries matching the exact target architecture and Hexagon driver version.
+- **Dynamic Web Controls:** Canvas-rendered UI elements lacking accessibility nodes rely entirely on WinRT OCR bounding boxes.
+
+---
+
+## Roadmap
+
+- [x] Multi-platform abstraction (`platform_adapter.py` supporting Windows, macOS, Android)
+- [x] Win32 UIAutomation & WinRT OCR integration
+- [x] Zero-cloud local decision heuristic (`decide_local`)
+- [x] Local SLM integration (`slm_decide.py` with ONNX GenAI and GGUF)
+- [x] On-device Whisper STT and TTS voice loop
+- [x] 7-Pillar Truth-First state model & 8-action developer decision space
+- [ ] Office Kit bi-directional socket bridge for dual-device phone-to-laptop pairing
+- [ ] Independent AST syntax and test verification module (`verification/`)
+- [ ] Nanosecond micro-benchmark telemetry suite (Modes A, B, C comparison)
+
+---
+
+## Attribution & License
+
+### Upstream Attribution
+JEVON incorporates architecture and code derived from [`typesafe-computer-use`](https://github.com/awlevin/typesafe-computer-use) by **Aaron Levin**, licensed under the **MIT License**. We gratefully acknowledge Aaron Levin's pioneering work in deterministic accessibility-driven computer use and classifier-based interaction.
+
+### Paradigm & Independence Notice
+JEVON is an independent open-source project. While conceptually inspired by machine-consumable decision intelligence paradigms, JEVON is **not affiliated with, endorsed by, sponsored by, or owned by TypeSafe Inc.** All trademarks belong to their respective owners.
+
+### License
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Contributing
+
+Contributions are welcome! Please adhere to our development standards:
+1. Ensure all code conforms to `ruff` linting (`ruff check .`).
+2. Verify existing tests pass without regressions (`pytest tests`).
+3. Maintain truth-first documentation: never document simulated or planned capabilities as verified.
