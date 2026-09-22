@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none" role="img" aria-label="JEVON Minimal Monochrome Logo">
+  <defs>
+    <style>
+      :root {
+        --mono-stroke: #0F172A;
+        --mono-faint: rgba(15, 23, 42, 0.35);
+        --mono-bg: #FFFFFF;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --mono-stroke: #F8FAFC;
+          --mono-faint: rgba(248, 250, 252, 0.4);
+          --mono-bg: #0B0F19;
+        }
+      }
+      .mono-solid {
+        stroke: var(--mono-stroke, currentColor);
+      }
+      .mono-dim {
+        stroke: var(--mono-faint, currentColor);
+      }
+      .mono-fill {
+        fill: var(--mono-stroke, currentColor);
+      }
+    </style>
+  </defs>
+
+  <!-- 1. Minimal Closed-Loop Outer Arc -->
+  <path class="mono-dim" 
+        d="M 160 48 A 88 88 0 1 0 216 128" 
+        stroke-width="3.5" stroke-linecap="round" stroke-dasharray="14 8"/>
+  <circle class="mono-fill" cx="216" cy="128" r="2.5"/>
+
+  <!-- 2. Developer Intent Terminal Chevron '>' -->
+  <path class="mono-solid" 
+        d="M 86 88 L 114 116 L 86 144" 
+        stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- 3. JEVON Monogram 'J' -->
+  <path class="mono-solid" 
+        d="M 154 60 
+           L 154 142 
+           A 30 30 0 0 1 124 172 
+           A 30 30 0 0 1 94 142" 
+        stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- 4. Deterministic Truth Node -->
+  <circle class="mono-fill" cx="154" cy="60" r="3.5"/>
+</svg>
