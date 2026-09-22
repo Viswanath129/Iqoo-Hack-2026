@@ -1,0 +1,10 @@
+.venv/
+runs/
+inspections/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.env
+dist/
+.agents/
+.kilo/
