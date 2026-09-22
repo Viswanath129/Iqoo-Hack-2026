@@ -700,11 +700,12 @@ def slm_verify_typed(
         "You verify whether text was typed correctly into a form field. "
         "Output JSON: {\"ok\": true/false, \"confidence\": 0.0-1.0}"
     )
+    field_val = field_after.value[:200] if field_after else "unknown"
     user = (
         f"Goal: {goal}\n"
         f"Field: {field_before.label!r} ({field_before.role})\n"
         f"Text typed: {typed!r}\n"
-        f"Field value now: {(field_after.value[:200] if field_after else 'unknown')!r}\n"
+        f"Field value now: {field_val!r}\n"
         f"Is this correct?"
     )
 

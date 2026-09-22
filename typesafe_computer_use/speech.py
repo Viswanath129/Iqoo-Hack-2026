@@ -70,6 +70,14 @@ def speak(text: str, wait: bool = True) -> None:
         return
 
     def _do_speak():
+        # Android / Termux TTS
+        if os.environ.get("ARGUS_TARGET") == "android" or os.path.exists("/data/data/com.termux"):
+            try:
+                subprocess.run(["termux-tts-speak", text], check=False)
+                return
+            except Exception:
+                pass
+
         if sys.platform == "win32":
             synth = _init_windows_synth()
             if synth is not None:

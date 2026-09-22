@@ -137,11 +137,13 @@ def _dump_ui_xml() -> str:
     return _adb("exec-out uiautomator dump /dev/tty")
 
 
-def _parse_bounds(bounds_str: str) -> tuple[float, float, float, float]:
-    """Parse bounds string like [0,0][1080,2400] to (x, y, w, h)."""
-    match = re.match(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]", bounds_str)
+def _parse_bounds(bounds_input: str | tuple[float, float, float, float]) -> tuple[float, float, float, float]:
+    """Parse bounds string like [0,0][1080,2400] to (x, y, w, h), or pass through tuple."""
+    if isinstance(bounds_input, (tuple, list)):
+        return tuple(float(v) for v in bounds_input)
+    match = re.match(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]", str(bounds_input))
     if not match:
-        return 0, 0, 0, 0
+        return 0.0, 0.0, 0.0, 0.0
     left, top, right, bottom = map(float, match.groups())
     return left, top, right - left, bottom - top
 
@@ -183,7 +185,11 @@ def click_at(point: tuple[float, float]) -> None:
 
 def press(key: str, command: bool = False) -> None:
     """Press a key."""
-    keycode = KEYCODES.get(key.lower(), f"KEYCODE_{key.upper()}")
+    key_clean = key.strip()
+    if key_clean.upper().startswith("KEYCODE_"):
+        keycode = key_clean.upper()
+    else:
+        keycode = KEYCODES.get(key_clean.lower(), f"KEYCODE_{key_clean.upper()}")
     _adb(f"shell input keyevent {keycode}")
 
 
@@ -196,31 +202,27 @@ def type_text(text: str) -> None:
 
 def clear_field() -> None:
     """Clear field by focusing, selecting all, and deleting."""
-    # A generic approach for Android, might vary based on focus
     _adb("shell input keyevent KEYCODE_MOVE_END")
-    # Hold shift and move home (not well supported, but backspace works if we just spam it or use a trick)
-    # A reliable way is to just spam delete for a reasonable length
     for _ in range(50):
         _adb("shell input keyevent KEYCODE_DEL", timeout=0.5)
 
 
 def scroll(lines: int) -> None:
     """Scroll vertically."""
-    # Simple swipe up or down. Positive lines = scroll down (swipe up)
-    # Get screen size to determine reasonable swipe
-    size = _adb("shell wm size")
-    match = re.search(r"(\d+)x(\d+)", size)
-    if match:
-        w, h = map(int, match.groups())
-        cx = w // 2
-        cy = h // 2
-        dy = 300 * (1 if lines > 0 else -1)
-        # Swipe from center to center-dy
-        # If lines > 0, swipe up -> y goes from cy+dy to cy-dy
-        # Wait, if we want to see things further down, we swipe UP.
-        start_y = cy + (200 if lines > 0 else -200)
-        end_y = cy - (200 if lines > 0 else -200)
-        _adb(f"shell input swipe {cx} {start_y} {cx} {end_y} 300")
+    try:
+        size = _adb("shell wm size")
+        match = re.search(r"(\d+)x(\d+)", str(size))
+        if match:
+            w, h = map(int, match.groups())
+        else:
+            w, h = 1080, 2400
+    except Exception:
+        w, h = 1080, 2400
+    cx = w // 2
+    cy = h // 2
+    start_y = cy + (200 if lines > 0 else -200)
+    end_y = cy - (200 if lines > 0 else -200)
+    _adb(f"shell input swipe {cx} {start_y} {cx} {end_y} 300")
 
 
 def frontmost_app_and_pid() -> tuple[str, int]:
@@ -228,20 +230,28 @@ def frontmost_app_and_pid() -> tuple[str, int]:
     out = _adb("shell dumpsys activity activities")
     app = ""
     pid = 0
-    # Search for mResumedActivity
-    for line in out.splitlines():
-        if "mResumedActivity" in line:
-            # Example: mResumedActivity: ActivityRecord{... u0 com.android.settings/.Settings t123}
+    # Search for mResumedActivity or Hist / ActivityRecord
+    for line in str(out).splitlines():
+        if "mResumedActivity" in line or "ActivityRecord{" in line or "Hist #" in line:
             match = re.search(r" ([a-zA-Z0-9_.]+)/", line)
             if match:
-                app = match.group(1)
+                pkg = match.group(1)
+                # Map package back to friendly name if known
+                app = pkg
+                for name, p in APP_PACKAGE_MAP.items():
+                    if p == pkg:
+                        app = name
+                        break
                 break
     
     if app:
-        # Find pid for this app
-        ps_out = _adb(f"shell pidof {app}", timeout=2.0)
-        if ps_out:
-            pid = int(ps_out.split()[0])
+        try:
+            target_pkg = APP_PACKAGE_MAP.get(app, app)
+            ps_out = _adb(f"shell pidof {target_pkg}", timeout=2.0)
+            if ps_out and str(ps_out).split():
+                pid = int(str(ps_out).split()[0])
+        except Exception:
+            pid = 0
             
     return app, pid
 
@@ -350,8 +360,13 @@ def focused_field() -> Field | None:
                 bounds_str = node.get("bounds", "")
                 x, y, w, h = _parse_bounds(bounds_str)
                 text = node.get("text", "")
+                role = ANDROID_ROLE_MAP.get(node.get("class", ""), "AXTextField")
+                label = node.get("text") or node.get("content-desc") or ""
+                placeholder = node.get("content-desc") or ""
                 return Field(
-                    id=node.get("resource-id", ""),
+                    role=role,
+                    label=label,
+                    placeholder=placeholder,
                     value=text,
                     x=x,
                     y=y,
@@ -359,8 +374,8 @@ def focused_field() -> Field | None:
                     h=h,
                     ref={"bounds": bounds_str, "id": node.get("resource-id"), "class": node.get("class")}
                 )
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug(f"Failed to find focused field: {e}")
     return None
 
 
@@ -368,10 +383,10 @@ def ax_press(ref) -> bool:
     """Press an accessibility node."""
     if not isinstance(ref, dict):
         return False
-    bounds_str = ref.get("bounds")
-    if not bounds_str:
+    bounds_val = ref.get("bounds")
+    if bounds_val is None:
         return False
-    x, y, w, h = _parse_bounds(bounds_str)
+    x, y, w, h = _parse_bounds(bounds_val)
     cx, cy = x + w / 2, y + h / 2
     click_at((cx, cy))
     return True
@@ -409,7 +424,7 @@ def ax_value(ref) -> str | None:
 def actionable_elements(pid: int, display_w_pt: float, display_h_pt: float) -> tuple[list[AxNode], list[AxNode], bool]:
     """Parse UIAutomator XML into AxNodes."""
     xml_str = _dump_ui_xml()
-    elements = []
+    elements: list[AxNode] = []
     
     try:
         root = ET.fromstring(xml_str)
@@ -433,13 +448,13 @@ def actionable_elements(pid: int, display_w_pt: float, display_h_pt: float) -> t
             
             elements.append(
                 AxNode(
+                    role=role,
+                    label=text,
                     x=x,
                     y=y,
                     w=w,
                     h=h,
-                    role=role,
-                    title=text,
-                    value=node.get("text") if editable else "",
+                    pressable=clickable or editable,
                     ref={"bounds": bounds_str, "id": node.get("resource-id"), "class": cls}
                 )
             )

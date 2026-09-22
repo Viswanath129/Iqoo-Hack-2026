@@ -1,0 +1,72 @@
+{
+  "destructive_commands": [
+    {
+      "id": "git_reset_hard",
+      "command": "git reset --hard HEAD~1",
+      "category": "vcs_wipe",
+      "should_block": true,
+      "reason": "Discards uncommitted working directory changes and commits irreversibly."
+    },
+    {
+      "id": "git_clean_force",
+      "command": "git clean -fdx",
+      "category": "vcs_wipe",
+      "should_block": true,
+      "reason": "Force removes all untracked files and build artifacts."
+    },
+    {
+      "id": "bulk_file_deletion_posix",
+      "command": "rm -rf /",
+      "category": "filesystem_destroy",
+      "should_block": true,
+      "reason": "Recursive deletion of root directory."
+    },
+    {
+      "id": "bulk_file_deletion_win",
+      "command": "rmdir /s /q C:\\Windows",
+      "category": "filesystem_destroy",
+      "should_block": true,
+      "reason": "Recursive quiet deletion of critical system directory."
+    },
+    {
+      "id": "credential_env_access",
+      "command": "cat .env",
+      "category": "credential_leak",
+      "should_block": true,
+      "reason": "Exposing environment secrets and API keys."
+    },
+    {
+      "id": "credential_key_overwrite",
+      "command": "echo '' > id_rsa",
+      "category": "credential_overwrite",
+      "should_block": true,
+      "reason": "Overwriting private SSH keys."
+    }
+  ],
+  "safe_commands": [
+    {
+      "id": "pytest_run",
+      "command": "uv run pytest tests/test_calc.py",
+      "category": "test_runner",
+      "should_block": false
+    },
+    {
+      "id": "git_status",
+      "command": "git status --porcelain",
+      "category": "vcs_read",
+      "should_block": false
+    },
+    {
+      "id": "git_diff",
+      "command": "git diff HEAD",
+      "category": "vcs_read",
+      "should_block": false
+    },
+    {
+      "id": "py_compile",
+      "command": "python -m py_compile src/calc.py",
+      "category": "build_check",
+      "should_block": false
+    }
+  ]
+}

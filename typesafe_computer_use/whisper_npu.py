@@ -33,13 +33,29 @@ def _init_qualcomm_npu():
         if _NPU_APP is not None or _NPU_FAILED:
             return _NPU_APP
 
-        whisper_small_dir = Path(r"B:\projects\Qualcomm\whisper_bundle\whisper_small_quantized_onnx\whisper_small_quantized-precompiled_qnn_onnx-w8a16-qualcomm_snapdragon_x_elite")
-        distil_whisper_dir = Path(r"B:\projects\Qualcomm\whisper_bundle\distil_whisper_onnx\distil_whisper-precompiled_qnn_onnx-float-qualcomm_snapdragon_x_elite")
+        env_whisper = os.environ.get("ARGUS_WHISPER_DIR")
+        whisper_small_win = Path(r"B:\projects\Qualcomm\whisper_bundle\whisper_small_quantized_onnx\whisper_small_quantized-precompiled_qnn_onnx-w8a16-qualcomm_snapdragon_x_elite")
+        distil_whisper_win = Path(r"B:\projects\Qualcomm\whisper_bundle\distil_whisper_onnx\distil_whisper-precompiled_qnn_onnx-float-qualcomm_snapdragon_x_elite")
+        local_model_dir = Path(__file__).resolve().parent.parent / "models" / "whisper-small"
+        android_dir = Path(os.path.expanduser("~/models/whisper-small"))
+        android_tmp = Path("/data/local/tmp/models/whisper-small")
 
-        candidates = [
-            (whisper_small_dir / "encoder.onnx", whisper_small_dir / "decoder.onnx", "openai/whisper-small", "Whisper-Small-Quantized (W8A16)"),
-            (distil_whisper_dir / "encoder.onnx", distil_whisper_dir / "decoder.onnx", "distil-whisper/distil-small.en", "Distil-Whisper"),
+        check_dirs = [
+            (Path(env_whisper) if env_whisper else None, "Custom ARGUS_WHISPER_DIR"),
+            (android_dir, "Android Termux ~/models"),
+            (android_tmp, "Android /data/local/tmp"),
+            (local_model_dir, "Local models/whisper-small"),
+            (whisper_small_win, "Windows Snapdragon X Elite Whisper-Small"),
+            (distil_whisper_win, "Windows Snapdragon X Elite Distil-Whisper"),
         ]
+
+        candidates = []
+        for d, name in check_dirs:
+            if d and d.is_dir():
+                enc = d / "encoder.onnx"
+                dec = d / "decoder.onnx"
+                hf_id = "openai/whisper-small"
+                candidates.append((enc, dec, hf_id, name))
 
         selected = None
         for enc, dec, hf_id, name in candidates:

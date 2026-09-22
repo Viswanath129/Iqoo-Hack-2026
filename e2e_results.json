@@ -1,0 +1,823 @@
+{
+  "timestamp_utc": "2026-09-22T15:49:32Z",
+  "status": "PASSED",
+  "total_tests": 100,
+  "passed": 100,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "duration_ms": 1591.88,
+  "tier_summaries": {
+    "tier_1": {
+      "name": "Tier 1 (Feature)",
+      "total": 100,
+      "passed": 100,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "duration_ms": 1538.433
+    }
+  },
+  "test_results": [
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature10TriTransportLayer.test_f10_adb_tunnel_transport_initialization",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 1082,
+      "duration_ms": 1.082,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature10TriTransportLayer.test_f10_ipc_transport_not_connected_raises",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 39,
+      "duration_ms": 0.039,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature10TriTransportLayer.test_f10_ipc_transport_queue_roundtrip",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 28,
+      "duration_ms": 0.028,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature10TriTransportLayer.test_f10_socket_transport_binary_framing",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 17,
+      "duration_ms": 0.017,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature10TriTransportLayer.test_f10_transport_timeout_handling",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 107811,
+      "duration_ms": 107.811,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature8TelemetrySchemas.test_f8_action_receipt_schema_and_serialization",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 56,
+      "duration_ms": 0.056,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature8TelemetrySchemas.test_f8_action_receipt_valid_statuses",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 36,
+      "duration_ms": 0.036,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature8TelemetrySchemas.test_f8_decision_command_schema_and_serialization",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 34,
+      "duration_ms": 0.034,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature8TelemetrySchemas.test_f8_state_observation_schema_and_serialization",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 22,
+      "duration_ms": 0.022,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature8TelemetrySchemas.test_f8_telemetry_json_wire_fidelity",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 66,
+      "duration_ms": 0.066,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature9OfficeKitBridge.test_f9_bridge_connect_and_disconnect",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 77,
+      "duration_ms": 0.077,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature9OfficeKitBridge.test_f9_bridge_latency_instrumentation_recorded",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 55,
+      "duration_ms": 0.055,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature9OfficeKitBridge.test_f9_bridge_send_and_receive_command",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 69,
+      "duration_ms": 0.069,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature9OfficeKitBridge.test_f9_bridge_send_and_receive_observation",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 50,
+      "duration_ms": 0.05,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_bridge_transports.TestFeature9OfficeKitBridge.test_f9_bridge_send_and_receive_receipt",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 56,
+      "duration_ms": 0.056,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature1DecisionProviderInterface.test_f1_decision_provider_abstract_instantiation_raises",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 15,
+      "duration_ms": 0.015,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature1DecisionProviderInterface.test_f1_decision_provider_decide_signature_contract",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 311,
+      "duration_ms": 0.311,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature1DecisionProviderInterface.test_f1_decision_provider_is_available_default",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 8,
+      "duration_ms": 0.008,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature1DecisionProviderInterface.test_f1_decision_provider_polymorphic_dispatch",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 52,
+      "duration_ms": 0.052,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature1DecisionProviderInterface.test_f1_decision_provider_subclassing_and_name",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 8,
+      "duration_ms": 0.008,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature2BoundedActionSpace.test_f2_action_space_done_is_terminal",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 40,
+      "duration_ms": 0.04,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature2BoundedActionSpace.test_f2_action_space_exact_count",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 21,
+      "duration_ms": 0.021,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature2BoundedActionSpace.test_f2_action_space_member_names",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 17,
+      "duration_ms": 0.017,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature2BoundedActionSpace.test_f2_action_space_rejects_unbounded_action",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 375,
+      "duration_ms": 0.375,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature2BoundedActionSpace.test_f2_action_space_string_enum_coercion",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 18,
+      "duration_ms": 0.018,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature3LocalDecisionProvider.test_f3_local_provider_after_apply_fix_decides_targeted_test",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 77,
+      "duration_ms": 0.077,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature3LocalDecisionProvider.test_f3_local_provider_clean_build_decides_done",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 46,
+      "duration_ms": 0.046,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature3LocalDecisionProvider.test_f3_local_provider_culprit_file_extraction_decides_inspect_file",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 30,
+      "duration_ms": 0.03,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature3LocalDecisionProvider.test_f3_local_provider_runs_with_zero_keys",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 8,
+      "duration_ms": 0.008,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature3LocalDecisionProvider.test_f3_local_provider_syntax_error_decides_inspect_error",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 34,
+      "duration_ms": 0.034,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature4TypeSafeJevProvider.test_f4_jev_provider_cloud_failure_falls_back",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 489,
+      "duration_ms": 0.489,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature4TypeSafeJevProvider.test_f4_jev_provider_custom_local_fallback_injection",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 15,
+      "duration_ms": 0.015,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature4TypeSafeJevProvider.test_f4_jev_provider_has_cloud_credentials_check",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 12,
+      "duration_ms": 0.012,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature4TypeSafeJevProvider.test_f4_jev_provider_is_available_always_true",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 8,
+      "duration_ms": 0.008,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature4TypeSafeJevProvider.test_f4_jev_provider_no_keys_falls_back_to_local",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 50,
+      "duration_ms": 0.05,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature5SafetyFallback.test_f5_safety_fallback_intercepts_apply_fix_without_target_file",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 2250,
+      "duration_ms": 2.25,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature5SafetyFallback.test_f5_safety_fallback_intercepts_low_confidence",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 675,
+      "duration_ms": 0.675,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature5SafetyFallback.test_f5_safety_fallback_intercepts_oscillation_loop",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 794,
+      "duration_ms": 0.794,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature5SafetyFallback.test_f5_safety_fallback_intercepts_targeted_test_without_target",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 683,
+      "duration_ms": 0.683,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature5SafetyFallback.test_f5_safety_fallback_passes_high_confidence",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 454,
+      "duration_ms": 0.454,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature6TypedDecisions.test_f6_decision_confidence_in_unit_interval",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 35,
+      "duration_ms": 0.035,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature6TypedDecisions.test_f6_decision_probability_contains_all_eight_actions",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 20,
+      "duration_ms": 0.02,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature6TypedDecisions.test_f6_decision_probability_distribution_sums_to_one",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 15,
+      "duration_ms": 0.015,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature6TypedDecisions.test_f6_decision_requires_confirmation_property",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 38,
+      "duration_ms": 0.038,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_decision_engine.TestFeature6TypedDecisions.test_f6_decision_to_dict_and_from_dict_roundtrip",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 30,
+      "duration_ms": 0.03,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature11LaptopActionExecutor.test_f11_executor_captures_failing_command",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 60979,
+      "duration_ms": 60.979,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature11LaptopActionExecutor.test_f11_executor_preserves_working_directory",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 70083,
+      "duration_ms": 70.083,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature11LaptopActionExecutor.test_f11_executor_returns_typed_action_receipt",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 54376,
+      "duration_ms": 54.376,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature11LaptopActionExecutor.test_f11_executor_runs_clean_command",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 57013,
+      "duration_ms": 57.013,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature11LaptopActionExecutor.test_f11_executor_subprocess_isolation",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 55870,
+      "duration_ms": 55.87,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature12SafetyFailsafes.test_f12_allowlist_allowed_commands",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 30,
+      "duration_ms": 0.03,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature12SafetyFailsafes.test_f12_allowlist_disallowed_commands",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 13,
+      "duration_ms": 0.013,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature12SafetyFailsafes.test_f12_command_timeout_intercepted",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 1053169,
+      "duration_ms": 1053.169,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature12SafetyFailsafes.test_f12_emergency_mouse_corner_stop_triggered",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 103,
+      "duration_ms": 0.103,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature12SafetyFailsafes.test_f12_mouse_outside_corner_passes",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 14,
+      "duration_ms": 0.014,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature13SafetyGate.test_f13_safety_gate_blocks_credential_env_access",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 24,
+      "duration_ms": 0.024,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature13SafetyGate.test_f13_safety_gate_blocks_git_clean_force",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 10,
+      "duration_ms": 0.01,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature13SafetyGate.test_f13_safety_gate_blocks_git_reset_hard",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 28,
+      "duration_ms": 0.028,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature13SafetyGate.test_f13_safety_gate_blocks_recursive_rm",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 10,
+      "duration_ms": 0.01,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_laptop_execution.TestFeature13SafetyGate.test_f13_safety_gate_permits_when_confirmed",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 57522,
+      "duration_ms": 57.522,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature16HonestNpuDetection.test_f16_npu_cpu_fallback_when_qnn_absent",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 3166,
+      "duration_ms": 3.166,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature16HonestNpuDetection.test_f16_npu_detection_deterministic",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 734,
+      "duration_ms": 0.734,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature16HonestNpuDetection.test_f16_npu_detection_hierarchy_tiers",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 9,
+      "duration_ms": 0.009,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature16HonestNpuDetection.test_f16_npu_detection_honest_active_tier",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 354,
+      "duration_ms": 0.354,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature16HonestNpuDetection.test_f16_npu_no_fake_hardware_claims",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 553,
+      "duration_ms": 0.553,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature17WhisperSttPipeline.test_f17_whisper_fallback_mode_flag",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 308,
+      "duration_ms": 0.308,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature17WhisperSttPipeline.test_f17_whisper_perception_audio_input_shape",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 408,
+      "duration_ms": 0.408,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature17WhisperSttPipeline.test_f17_whisper_perception_model_offline_loading",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 12,
+      "duration_ms": 0.012,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature17WhisperSttPipeline.test_f17_whisper_stt_sample_rate_contract",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 5,
+      "duration_ms": 0.005,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature17WhisperSttPipeline.test_f17_whisper_stt_transcription_format",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 7,
+      "duration_ms": 0.007,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature18TtsAndTerminalExtractor.test_f18_terminal_error_extractor_assertion_error",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 179,
+      "duration_ms": 0.179,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature18TtsAndTerminalExtractor.test_f18_terminal_error_extractor_empty_text_handled",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 6,
+      "duration_ms": 0.006,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature18TtsAndTerminalExtractor.test_f18_terminal_error_extractor_python_traceback",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 14,
+      "duration_ms": 0.014,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature18TtsAndTerminalExtractor.test_f18_terminal_error_extractor_syntax_error",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 9,
+      "duration_ms": 0.009,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature18TtsAndTerminalExtractor.test_f18_tts_feedback_format_message",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 8,
+      "duration_ms": 0.008,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature7TruthFirstState.test_f7_truth_first_all_seven_pillars_present",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 42,
+      "duration_ms": 0.042,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature7TruthFirstState.test_f7_truth_first_append_only_audit_log",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 20,
+      "duration_ms": 0.02,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature7TruthFirstState.test_f7_truth_first_oscillation_detection",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 13,
+      "duration_ms": 0.013,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature7TruthFirstState.test_f7_truth_first_repeated_failure_detection",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 55,
+      "duration_ms": 0.055,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_perception_npu.TestFeature7TruthFirstState.test_f7_truth_first_resolve_open_question",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 11,
+      "duration_ms": 0.011,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_telemetry_benchmarks.TestFeature19MicroBenchmarks.test_f19_all_seven_stages_instrumented",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 11,
+      "duration_ms": 0.011,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_telemetry_benchmarks.TestFeature19MicroBenchmarks.test_f19_nanosecond_micro_benchmark_total_sum",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 9,
+      "duration_ms": 0.009,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_telemetry_benchmarks.TestFeature19MicroBenchmarks.test_f19_nanosecond_to_millisecond_conversion",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 7,
+      "duration_ms": 0.007,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_telemetry_benchmarks.TestFeature19MicroBenchmarks.test_f19_stopwatch_positive_monotonicity",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 5332,
+      "duration_ms": 5.332,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_telemetry_benchmarks.TestFeature19MicroBenchmarks.test_f19_sub_millisecond_precision_record",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 55,
+      "duration_ms": 0.055,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_telemetry_benchmarks.TestFeature20ComparativeBenchmarks.test_f20_comparative_benchmark_invalid_mode_raises",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 19,
+      "duration_ms": 0.019,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_telemetry_benchmarks.TestFeature20ComparativeBenchmarks.test_f20_comparative_benchmark_modes_exist",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 6,
+      "duration_ms": 0.006,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_telemetry_benchmarks.TestFeature20ComparativeBenchmarks.test_f20_comparative_table_generation",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 15,
+      "duration_ms": 0.015,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_telemetry_benchmarks.TestFeature20ComparativeBenchmarks.test_f20_mode_a_local_only_zero_cloud_cost",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 7,
+      "duration_ms": 0.007,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_telemetry_benchmarks.TestFeature20ComparativeBenchmarks.test_f20_mode_b_cloud_cost_calculation",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 5,
+      "duration_ms": 0.005,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_verification_engine.TestFeature14VerificationEngine.test_f14_verification_ast_syntax_check",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 232,
+      "duration_ms": 0.232,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_verification_engine.TestFeature14VerificationEngine.test_f14_verification_composite_all_checks_required",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 73,
+      "duration_ms": 0.073,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_verification_engine.TestFeature14VerificationEngine.test_f14_verification_error_elimination_check",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 7,
+      "duration_ms": 0.007,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_verification_engine.TestFeature14VerificationEngine.test_f14_verification_exit_code_zero",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 5,
+      "duration_ms": 0.005,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_verification_engine.TestFeature14VerificationEngine.test_f14_verification_regex_pattern_match",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 38,
+      "duration_ms": 0.038,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_verification_engine.TestFeature15ClosedLoopCycle.test_f15_closed_loop_cycle_index_increments",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 19,
+      "duration_ms": 0.019,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_verification_engine.TestFeature15ClosedLoopCycle.test_f15_closed_loop_history_accumulation",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 41,
+      "duration_ms": 0.041,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_verification_engine.TestFeature15ClosedLoopCycle.test_f15_closed_loop_state_advancement",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 43,
+      "duration_ms": 0.043,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_verification_engine.TestFeature15ClosedLoopCycle.test_f15_closed_loop_terminal_condition",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 36,
+      "duration_ms": 0.036,
+      "error": null
+    },
+    {
+      "test_id": "e2e.tier1_feature.test_verification_engine.TestFeature15ClosedLoopCycle.test_f15_closed_loop_unrecovered_failure_halts",
+      "tier": "Tier 1 (Feature)",
+      "status": "PASS",
+      "duration_us": 30,
+      "duration_ms": 0.03,
+      "error": null
+    }
+  ]
+}
