@@ -14,14 +14,18 @@ from collections.abc import Callable, Iterable
 from pathlib import Path
 from typing import NamedTuple
 
-import ApplicationServices as AS
-import Quartz
+try:
+    import ApplicationServices as AS
+    import Quartz
+except ImportError:
+    AS = None
+    Quartz = None
 from PIL import Image
 
 from .config import ABORT_CORNER_PX
 from .models import Abort, AxNode, Field
 
-KEYCODES = {"return": 36, "tab": 48, "escape": 53, "a": 0, "delete": 51}
+KEYCODES = {"return": 36, "tab": 48, "escape": 53, "a": 0, "delete": 51, "space": 49}
 MIN_WINDOW_SIDE_PT = 50.0  # anything smaller is a palette or a shadow, not the window being worked in
 
 # ------------------------------------------------------------------ escape hatch
@@ -131,6 +135,14 @@ def activate(app: str, timeout: float = 3.0) -> bool:
 def open_url(browser: str, url: str) -> bool:
     osascript(f'tell application "{browser}" to open location "{url}"')
     return activate(browser)
+
+
+def play_media() -> None:
+    press("space")
+
+
+def launch_or_activate_app(app: str) -> bool:
+    return activate(app)
 
 
 def browser_url(browser: str) -> str | None:
@@ -478,3 +490,5 @@ def actionable_elements(pid: int, display_w_pt: float, display_h_pt: float) -> t
     app = AS.AXUIElementCreateApplication(pid)
     AS.AXUIElementSetMessagingTimeout(app, AX_MESSAGE_TIMEOUT)
     return walk_actionable(app, _ax_children, _ax_attrs, _ax_actions, display_w_pt, display_h_pt)
+
+

@@ -9,7 +9,8 @@ import sys
 import time
 from pathlib import Path
 
-from . import config, macos
+from . import config
+from . import platform_adapter as macos
 from .actions import Context
 from .perception import capture, perceive
 from .report import annotate, ax_count, render_payload
@@ -20,18 +21,18 @@ from .writer import make_writer
 DOTENV = Path.cwd() / ".env"
 
 
-def _prepare() -> None:
+def _prepare(require_key: bool = True) -> None:
     config.load_dotenv(DOTENV)
-    if not os.environ.get("TYPESAFE_API_KEY"):
-        sys.exit("TYPESAFE_API_KEY is not set (export it or put it in .env)")
+    if require_key and not os.environ.get("TYPESAFE_API_KEY"):
+        print("[NOTICE] TYPESAFE_API_KEY is not set: running in local on-device mode (NPU/heuristics).")
 
 
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(
         prog="clicker",
-        description="Drive this computer toward a goal: screen OCR, a TypeSafe classifier, deterministic actions.",
+        description="Drive this computer toward a goal: screen OCR, NPU acceleration, deterministic actions, and speech.",
     )
-    parser.add_argument("goal", help="what you want done on this computer")
+    parser.add_argument("goal", nargs="?", default="", help="what you want done on this computer (or use --voice)")
     parser.add_argument("--act", action="store_true", help="actually click and type (default: dry run, one step)")
     parser.add_argument("--steps", type=int, default=config.DEFAULT_STEPS, help="max actions before stopping")
     parser.add_argument("--min-confidence", type=float, default=config.DEFAULT_MIN_CONFIDENCE, help="stop below this confidence")
@@ -40,17 +41,45 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--image", type=Path, help="replay a saved capture instead of the live screen (never acts)")
     parser.add_argument("--app", help="frontmost app to report during replay")
     parser.add_argument("--url", help="browser URL to report during replay")
+    parser.add_argument("--voice", action="store_true", help="listen to your voice (microphone) for the goal")
+    parser.add_argument("--speak", action="store_true", help="speak actions and results aloud via speech synthesis")
+    parser.add_argument("--local", action="store_true", help="force local on-device decision engine (no cloud API)")
+    parser.add_argument("--target", choices=["android", "windows", "macos"], default=None,
+                        help="target platform (default: auto-detect). Sets ARGUS_TARGET env var.")
+    parser.add_argument("--model", choices=["slm", "cloud", "local"], default=None,
+                        help="decision engine: slm (on-device NPU), cloud (TypeSafe JEV), local (keyword heuristics)")
     args = parser.parse_args(argv)
 
-    _prepare()
+    # Set target platform before any platform_adapter imports
+    if args.target:
+        os.environ["ARGUS_TARGET"] = args.target
+    if args.model == "local":
+        args.local = True
+
+    from . import speech
+    from . import whisper_npu
+
+    goal = args.goal.strip()
+    if args.voice or not goal:
+        # Pre-warm Qualcomm Hexagon NPU Whisper model before activating mic
+        print("[NPU] Initializing Snapdragon Hexagon NPU Whisper...", flush=True)
+        whisper_npu.warmup_npu()
+
+        if args.voice:
+            speech.speak("I am listening. What is your goal?", wait=True)
+            goal = speech.listen(prompt="Speak your goal now...")
+        if not goal:
+            goal = speech.listen(prompt="Please enter or speak your goal:")
+        if not goal:
+            sys.exit("No goal provided. Exiting.")
+
+    _prepare(require_key=not args.local and not args.image and bool(os.environ.get("TYPESAFE_API_KEY")))
     if args.act and not macos.accessibility_trusted():
         sys.exit("this terminal lacks Accessibility permission; grant it in System Settings > Privacy & Security")
     writer = make_writer()
-    if writer is None:
-        print("writer disabled: no ANTHROPIC_API_KEY; type_text, writer-proposed URLs and the final answer need it")
 
     cfg = RunConfig(
-        goal=args.goal,
+        goal=goal,
         out=args.out,
         act=args.act,
         steps=args.steps,
@@ -59,11 +88,13 @@ def main(argv: list[str] | None = None) -> None:
         image=args.image,
         app=args.app,
         url=args.url,
+        local=args.local,
+        speak=args.speak,
     )
 
     def ctx_factory(typesafe, history):
         return Context(
-            goal=args.goal,
+            goal=goal,
             browser=config.browser(),
             email=config.email(),
             typesafe=typesafe,
@@ -111,5 +142,14 @@ def inspect(argv: list[str] | None = None) -> None:
     print(format_timing(timing))
     print(f"  {annotated}\n  {text}")
     if not args.no_open:
-        subprocess.run(["open", str(annotated)], check=False)
-        subprocess.run(["open", "-t", str(text)], check=False)
+        if sys.platform == "win32":
+            os.startfile(str(annotated))
+            os.startfile(str(text))
+        else:
+            subprocess.run(["open", str(annotated)], check=False)
+            subprocess.run(["open", "-t", str(text)], check=False)
+
+
+if __name__ == "__main__":
+    main()
+

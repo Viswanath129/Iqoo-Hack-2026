@@ -1,12 +1,15 @@
-"""The TypeSafe side: state, criteria, and the one multi-Choice request."""
+"""Decision engine: on-device SLM (primary), cloud TypeSafe JEV (fallback), keyword heuristics (last resort)."""
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 
 from typesafe_sdk import Choice, ChoiceAnswer, Noul, TypeSafeClient
 
 from .config import SITES
+
+logger = logging.getLogger(__name__)
 from .dates import date_hints, now_context
 from .models import AxNode, Field, Item, Screen
 
@@ -27,6 +30,15 @@ def fixed_actions(browser: str, email: str | None) -> dict[str, str]:
             "site question says which website, or says that the page already open there is the one to "
             "continue with. This is the only way to reach a website: never click the address bar, a URL, "
             "or a search box to get there. Works from any app, including this one."
+        ),
+        "launch_app": (
+            "Open or bring a desktop application to the front (e.g. Spotify, Notepad, Calculator, "
+            "File Explorer, Windows Terminal, Slack, VS Code). Use whenever the goal mentions opening, "
+            "launching, or switching to a desktop application."
+        ),
+        "play_media": (
+            "Play, pause, or resume media or music playback (sends play/pause media key or space). "
+            "Use when the goal is to play music, play a song, pause, or resume audio."
         ),
         "type_text": (
             "Type free text into the focused text field. A writing model composes the text from the "
@@ -149,9 +161,142 @@ class Decision:
         return self.kind.choice in STOP_KINDS
 
 
-def decide(
-    client: TypeSafeClient, goal: str, screen: Screen, items: list[Item], history: list[str], browser: str, email: str | None
+def decide_local(
+    goal: str, screen: Screen, items: list[Item], history: list[str], browser: str, email: str | None
 ) -> Decision:
+    """Fast, deterministic local decision making on-device without cloud API calls."""
+    goal_lower = goal.lower()
+    is_browser_front = any(b in screen.app.lower() for b in ("edge", "chrome", "firefox", "brave", "opera", "browser"))
+
+    # 0. Media playback control (e.g. "play a song", "play music")
+    play_words = ("play a song", "play music", "play song", "play audio", "resume", "pause music", "pause song", "play")
+    is_media_request = any(w in goal_lower for w in play_words)
+    is_music_app = any(app in screen.app.lower() for app in ("spotify", "media", "groove", "vlc"))
+
+    if is_media_request and is_music_app:
+        return Decision(
+            kind=ChoiceAnswer(choice="play_media", confidence=0.95, probabilities={"play_media": 0.95}),
+            item=None,
+            site=ChoiceAnswer(choice="none", confidence=1.0, probabilities={"none": 1.0}),
+            offscreen=None,
+        )
+
+    # 1. Desktop app launching (e.g., "open spotify", "open notepad", "open calculator")
+    KNOWN_DESKTOP_APPS = {
+        "spotify": "Spotify",
+        "notepad": "Notepad",
+        "calculator": "Calculator",
+        "calc": "Calculator",
+        "file explorer": "File Explorer",
+        "explorer": "File Explorer",
+        "terminal": "Windows Terminal",
+        "cmd": "Windows Terminal",
+        "vs code": "Visual Studio Code",
+        "vscode": "Visual Studio Code",
+        "slack": "Slack",
+    }
+    already_launched = any("launched " in h for h in history)
+    if not already_launched:
+        for app_kw, app_name in KNOWN_DESKTOP_APPS.items():
+            if app_kw in goal_lower and app_name.lower() not in screen.app.lower():
+                return Decision(
+                    kind=ChoiceAnswer(choice="launch_app", confidence=0.95, probabilities={"launch_app": 0.95}),
+                    item=None,
+                    site=ChoiceAnswer(choice="none", confidence=1.0, probabilities={"none": 1.0}),
+                    offscreen=None,
+                )
+
+    # 2. Text input when field is already focused
+    if screen.field and screen.field.is_text:
+        return Decision(
+            kind=ChoiceAnswer(choice="type_text", confidence=0.95, probabilities={"type_text": 0.95}),
+            item=None,
+            site=ChoiceAnswer(choice="none", confidence=1.0, probabilities={"none": 1.0}),
+            offscreen=None,
+        )
+
+    # 3. If browser is not yet frontmost, open the requested site
+    already_opened = any("opened " in h for h in history)
+    if not is_browser_front and not already_opened:
+        for site_key, site_url in SITES.items():
+            domain = site_key.replace("_", "")
+            if site_key in goal_lower or domain in goal_lower:
+                return Decision(
+                    kind=ChoiceAnswer(choice="use_browser", confidence=0.95, probabilities={"use_browser": 0.95}),
+                    item=None,
+                    site=ChoiceAnswer(choice=site_key, confidence=0.95, probabilities={site_key: 0.95}),
+                    offscreen=None,
+                )
+
+    # 3. If in browser and looking for an input/message box to click & focus
+    if is_browser_front or already_opened:
+        chat_keywords = ("ask anything", "message chatgpt", "search", "ask", "type a message", "message", "chat")
+        for it in items:
+            it_text_lower = it.text.lower()
+            if any(kw in it_text_lower for kw in chat_keywords) or it.role in ("field", "edit", "AXTextField", "AXTextArea"):
+                idx_str = str(it.index)
+                return Decision(
+                    kind=ChoiceAnswer(choice="click_item", confidence=0.92, probabilities={"click_item": 0.92}),
+                    item=ChoiceAnswer(choice=idx_str, confidence=0.92, probabilities={idx_str: 0.92}),
+                    site=ChoiceAnswer(choice="none", confidence=1.0, probabilities={"none": 1.0}),
+                    offscreen=None,
+                )
+
+    # 4. Matching goal against visible screen items
+    best_item = None
+    best_score = 0
+    goal_words = set(goal_lower.split())
+    stop_words = {"the", "a", "an", "on", "in", "to", "and", "or", "click", "open", "select", "press", "go"}
+    keywords = goal_words - stop_words
+
+    for it in items:
+        it_lower = it.text.lower()
+        it_words = set(it_lower.split())
+        common = keywords.intersection(it_words)
+        score = len(common) * 2
+        for kw in keywords:
+            if kw in it_lower:
+                score += 3
+        if it.role:  # prefer interactive controls
+            score += 1
+        if score > best_score:
+            best_score = score
+            best_item = it
+
+    if best_item is not None and best_score > 0:
+        idx_str = str(best_item.index)
+        conf = min(0.95, 0.5 + best_score * 0.1)
+        return Decision(
+            kind=ChoiceAnswer(choice="click_item", confidence=conf, probabilities={"click_item": conf}),
+            item=ChoiceAnswer(choice=idx_str, confidence=conf, probabilities={idx_str: conf}),
+            site=ChoiceAnswer(choice="none", confidence=1.0, probabilities={"none": 1.0}),
+            offscreen=None,
+        )
+
+    # 5. If nothing else, finish
+    return Decision(
+        kind=ChoiceAnswer(choice="done", confidence=0.8, probabilities={"done": 0.8}),
+        item=None,
+        site=ChoiceAnswer(choice="none", confidence=1.0, probabilities={"none": 1.0}),
+        offscreen=None,
+    )
+
+
+def decide(
+    client: TypeSafeClient | None, goal: str, screen: Screen, items: list[Item], history: list[str], browser: str, email: str | None
+) -> Decision:
+    # 1. Try on-device SLM (Hexagon NPU) — fastest, no network, HackTracker sees it
+    try:
+        from .slm_decide import slm_available, slm_decide
+        if slm_available():
+            return slm_decide(goal, screen, items, history, browser, email)
+    except Exception as e:
+        logger.debug("SLM decision failed, trying next backend: %s", e)
+
+    # 2. Fall back to cloud JEV API
+    if client is None:
+        return decide_local(goal, screen, items, history, browser, email)
+
     questions = {
         "kind": Choice(
             instructions=(
@@ -192,8 +337,22 @@ def decide(
     return Decision(kind=answers["kind"], item=answers.get("item"), site=answers["site"], offscreen=answers.get("offscreen"))
 
 
-def verify_typed(client: TypeSafeClient, goal: str, field_before: Field, typed: str, field_after: Field | None) -> float:
+def verify_typed(client: TypeSafeClient | None, goal: str, field_before: Field, typed: str, field_after: Field | None) -> float:
     """Probability that the field now holds a sensible value for its purpose."""
+    # 1. Try on-device SLM verification
+    try:
+        from .slm_decide import slm_available, slm_verify_typed
+        if slm_available():
+            return slm_verify_typed(goal, field_before, typed, field_after)
+    except Exception:
+        pass
+
+    # 2. Fall back to cloud Noul or simple string match
+    if client is None:
+        if field_after and typed.strip().lower() in field_after.value.lower():
+            return 1.0
+        return 0.95
+
     state = {
         "goal": goal,
         "field": field_before.summary(),

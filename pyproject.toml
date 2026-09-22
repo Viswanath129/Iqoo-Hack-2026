@@ -5,7 +5,7 @@ description = "Cheap, fast computer use on macOS: deterministic screen state, a 
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 authors = [{ name = "Aaron Levin" }]
 keywords = ["computer-use", "automation", "ocr", "typesafe", "macos", "agents"]
 classifiers = [
@@ -13,17 +13,23 @@ classifiers = [
     "Environment :: MacOS X",
     "Intended Audience :: Developers",
     "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Libraries",
 ]
 dependencies = [
-    "anthropic==1.6.0",
-    "ocrmac==1.0.1",
-    "pyobjc-framework-ApplicationServices==12.2.2",
-    "pyobjc-framework-Quartz==12.2.2",
-    "typesafe-sdk==0.6.0",
+    "anthropic>=1.6.0",
+    "pillow>=10.0.0",
+    "typesafe-sdk>=0.6.0",
+    "ocrmac>=1.0.1; sys_platform == 'darwin'",
+    "pyobjc-framework-ApplicationServices>=12.2.2; sys_platform == 'darwin'",
+    "pyobjc-framework-Quartz>=12.2.2; sys_platform == 'darwin'",
+    "winsdk>=1.0.0b10; sys_platform == 'win32'",
+    "uiautomation>=2.0.20; sys_platform == 'win32'",
+    "mss>=9.0.0; sys_platform == 'win32'",
 ]
 
 [project.urls]
@@ -54,3 +60,6 @@ ignore = ["E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+norecursedirs = ["e2e", "fixtures", ".git", ".venv"]
+markers = ["interactive: marks tests that move the mouse or type (deselect with '-m \"not interactive\"')"]
+

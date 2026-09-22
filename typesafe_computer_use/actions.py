@@ -8,7 +8,7 @@ from dataclasses import dataclass
 import anthropic
 from typesafe_sdk import TypeSafeClient
 
-from . import macos
+from . import platform_adapter as macos
 from .config import SITES
 from .decide import OFFSCREEN_PREFIX, Decision, verify_typed
 from .models import Field, Item, Screen
@@ -125,11 +125,50 @@ def _type_email(decision, screen: Screen, items, ctx: Context) -> str:
     return f"typed email {how}"
 
 
+def _extract_local_text(goal: str) -> str:
+    """Extract search query or text payload from a natural language goal."""
+    g = goal.strip()
+    g_lower = g.lower()
+    triggers = [
+        "ask for ",
+        "ask about ",
+        "ask ",
+        "search for ",
+        "search ",
+        "type ",
+        "enter ",
+        "write ",
+        "query ",
+        "find ",
+    ]
+    if " and " in g_lower:
+        part = g.split(" and ", 1)[1].strip()
+        for trig in triggers:
+            if trig in part.lower():
+                idx = part.lower().index(trig) + len(trig)
+                return part[idx:].strip()
+        return part
+
+    for trig in triggers:
+        if trig in g_lower:
+            idx = g_lower.index(trig) + len(trig)
+            return g[idx:].strip()
+
+    return g
+
+
 def _type_text(decision, screen: Screen, items, ctx: Context) -> str:
     if not (screen.field and screen.field.is_text):
         return "type_text refused: no text field is focused"
     if ctx.writer is None:
-        return "type_text refused: no writer available"
+        text = _extract_local_text(ctx.goal)
+        if not text:
+            return "type_text refused: no text extracted to type"
+        how = fill_field(screen.field, text)
+        time.sleep(0.3)
+        macos.press("return")
+        return f"typed {text!r} into {screen.field.label!r} {how} and pressed Return"
+
     text = compose_text(ctx.writer, ctx.goal, screen, items, ctx.history)
     if not text:
         return "type_text refused: writer declined to fill this field"
@@ -158,8 +197,49 @@ def _scroll(lines: int, description: str):
     return handler
 
 
+def _extract_app_name(goal: str) -> str:
+    g_lower = goal.lower()
+    known = {
+        "spotify": "Spotify",
+        "notepad": "Notepad",
+        "calculator": "Calculator",
+        "calc": "Calculator",
+        "explorer": "File Explorer",
+        "files": "File Explorer",
+        "terminal": "Windows Terminal",
+        "cmd": "Windows Terminal",
+        "vs code": "Visual Studio Code",
+        "vscode": "Visual Studio Code",
+        "slack": "Slack",
+    }
+    for k, name in known.items():
+        if k in g_lower:
+            return name
+    for verb in ("open ", "launch ", "start "):
+        if verb in g_lower:
+            part = g_lower.split(verb, 1)[1].split()[0]
+            return part.title()
+    return "App"
+
+
+def _launch_app(decision, screen: Screen, items, ctx: Context) -> str:
+    app_name = _extract_app_name(ctx.goal)
+    ok = macos.launch_or_activate_app(app_name)
+    time.sleep(1.0)
+    if ok:
+        return f"launched {app_name} and brought it to the front"
+    return f"launch_app failed: could not open or activate {app_name}"
+
+
+def _play_media(decision, screen: Screen, items, ctx: Context) -> str:
+    macos.play_media()
+    return "played media (sent play/pause)"
+
+
 _HANDLERS = {
     "use_browser": _use_browser,
+    "launch_app": _launch_app,
+    "play_media": _play_media,
     "type_email": _type_email,
     "type_text": _type_text,
     "press_enter": _key("return", "pressed Return"),

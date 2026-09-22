@@ -195,3 +195,23 @@ def test_typing_uses_keystrokes_when_there_is_no_element(calls, monkeypatch):
 def test_the_field_record_leaves_the_element_out_so_a_run_can_be_written():
     record = field(ref=object(), value="hello").record()
     assert "ref" not in record and json.loads(json.dumps(record))["value"] == "hello"
+
+
+def test_perform_launch_app(monkeypatch, screen):
+    launched = []
+    monkeypatch.setattr(macos, "launch_or_activate_app", lambda app: launched.append(app) or True)
+    decision = SimpleNamespace(chosen="launch_app", kind=SimpleNamespace(choice="launch_app", confidence=0.9))
+    ctx = actions.Context("open Spotify and play a song", "Google Chrome", None, None, None, [])
+    res = actions.perform(decision, screen, [], ctx)
+    assert "launched Spotify" in res
+    assert launched == ["Spotify"]
+
+
+def test_perform_play_media(monkeypatch, screen):
+    played = []
+    monkeypatch.setattr(macos, "play_media", lambda: played.append(True))
+    decision = SimpleNamespace(chosen="play_media", kind=SimpleNamespace(choice="play_media", confidence=0.9))
+    ctx = actions.Context("play music", "Google Chrome", None, None, None, [])
+    res = actions.perform(decision, screen, [], ctx)
+    assert "played media" in res
+    assert played == [True]

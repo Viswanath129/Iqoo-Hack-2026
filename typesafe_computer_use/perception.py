@@ -6,12 +6,20 @@ import math
 from dataclasses import replace
 from pathlib import Path
 
-from ocrmac import ocrmac
 from PIL import Image, ImageChops, ImageStat
 
-from . import macos
+try:
+    from ocrmac import ocrmac
+except ImportError:
+
+    class ocrmac:
+        OCR = None
+
+
+from . import platform_adapter as macos
 from .config import MAX_OPTIONS, MIN_OCR_CONFIDENCE
 from .models import AxNode, Box, Item, Screen
+from .ocr import ocr_crop as _npu_ocr_crop
 from .timing import OCR_RECTS, OCR_REGION_PCT, phase
 
 Line = tuple[str, float, Box]
@@ -61,6 +69,23 @@ def capture(
     return Screen(image=image, scale=macos.display_scale(image), app=frontmost, field=field, url=page_url, pid=pid, window=window)
 
 
+AGENT_NOISE_PHRASES = (
+    "activating microphone",
+    "voice input",
+    "viswa jav",
+    "enter goal",
+    "speak your goal",
+    "driving the machine",
+    "operating in local",
+    "step limit",
+    "press [s]",
+    "press [q]",
+    "press space",
+    "running in local",
+    "writer disabled",
+)
+
+
 def goal_echoes(goal: str) -> set[str]:
     """Substrings that identify a screen line as the command that launched this run."""
     norm = " ".join(goal.lower().split())
@@ -69,6 +94,8 @@ def goal_echoes(goal: str) -> set[str]:
 
 def is_echo(text: str, echoes: set[str]) -> bool:
     norm = " ".join(text.lower().split())
+    if any(phrase in norm for phrase in AGENT_NOISE_PHRASES):
+        return True
     return any(e in norm for e in echoes)
 
 
@@ -223,13 +250,15 @@ def ocr_region(screen: Screen) -> Box:
     return clamped if clamped[2] > clamped[0] and clamped[3] > clamped[1] else (0.0, 0.0, width, height)
 
 
+
 def ocr_crop(image: Image.Image, rect: Box) -> list[Line]:
-    """OCR one rectangle of the capture. Boxes come back in full-capture pixels, so nothing downstream
-    knows a crop happened."""
+    """OCR one rectangle of the capture."""
     x1, y1, x2, y2 = (round(v) for v in rect)
     crop = image if (x1, y1, x2, y2) == (0, 0, image.width, image.height) else image.crop((x1, y1, x2, y2))
-    raw = ocrmac.OCR(crop, recognition_level="accurate").recognize(px=True)
-    return [(text, conf, (b[0] + x1, b[1] + y1, b[2] + x1, b[3] + y1)) for text, conf, b in raw]
+    if getattr(ocrmac, "OCR", None) is not None:
+        raw = ocrmac.OCR(crop, recognition_level="accurate").recognize(px=True)
+        return [(text, conf, (b[0] + x1, b[1] + y1, b[2] + x1, b[3] + y1)) for text, conf, b in raw]
+    return _npu_ocr_crop(image, rect)
 
 
 def thumbnail(image: Image.Image, divisor: int = THUMB_DIVISOR) -> Image.Image:

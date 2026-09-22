@@ -10,9 +10,10 @@ from pathlib import Path
 import anthropic
 from typesafe_sdk import TypeSafeClient
 
-from . import macos
+from . import platform_adapter as macos
 from .actions import Context, is_noop, perform
-from .config import DEFAULT_DELAY, DEFAULT_MIN_CONFIDENCE, DEFAULT_STEPS, MAX_OPTIONS
+from .config import DEFAULT_DELAY, DEFAULT_MIN_CONFIDENCE, DEFAULT_STEPS, MAX_OPTIONS, classifier_model
+
 from .decide import Decision, decide, offscreen_records
 from .models import Abort, Item, Screen
 from .perception import OcrCache, capture, perceive
@@ -44,6 +45,8 @@ class RunConfig:
     image: Path | None = None  # replay a saved capture (never acts)
     app: str | None = None  # frontmost app to report during replay
     url: str | None = None  # browser URL to report during replay
+    local: bool = False  # run with on-device local decision engine
+    speak: bool = False  # announce actions and answers via speech synthesis
 
     @property
     def replay(self) -> bool:
@@ -64,17 +67,34 @@ class RunState:
 
 def run(cfg: RunConfig, ctx_factory) -> RunState:
     """Drive the loop. ctx_factory(typesafe, history) builds the action Context."""
+    import os
+    from contextlib import nullcontext
+    from . import speech
+
     cfg.out.mkdir(parents=True, exist_ok=True)
     log = Log(cfg.out / "run.log")
     log(f"run folder: {cfg.out}")
     if cfg.act:
         log("driving the machine. abort: Ctrl-C, or slam the mouse into the top-left corner.")
 
+    if cfg.speak:
+        speech.speak(f"Starting goal: {cfg.goal}", wait=False)
+
     state = RunState()
     started = time.time()
     try:
-        with TypeSafeClient() as typesafe:
+        if cfg.local:
+            client_cm = nullcontext(None)
+        else:
+            try:
+                client_cm = TypeSafeClient(model=classifier_model())
+            except Exception:
+                client_cm = nullcontext(None)
+        with client_cm as typesafe:
+            if typesafe is None:
+                log("operating in local on-device mode (offline NPU / heuristics)")
             ctx = ctx_factory(typesafe, state.history)
+
             for step in range(1, cfg.steps + 1):
                 if not run_step(cfg, ctx, state, step, log):
                     break
@@ -85,6 +105,8 @@ def run(cfg: RunConfig, ctx_factory) -> RunState:
     except (KeyboardInterrupt, Abort) as e:
         state.outcome = f"aborted ({e or 'Ctrl-C'})"
         log(f"\n{state.outcome} after {len(state.history)} actions")
+        if cfg.speak:
+            speech.speak("Task stopped.", wait=False)
     finally:
         summary = {
             "goal": cfg.goal,
@@ -114,6 +136,9 @@ def conclude(cfg: RunConfig, ctx: Context, state: RunState, log: Log) -> None:
         return
     if ctx.writer is None:
         log("\nno answer: the writer is disabled (set ANTHROPIC_API_KEY)")
+        if cfg.speak:
+            from . import speech
+            speech.speak(f"Task finished with status: {state.outcome}", wait=True)
         return
     started = time.perf_counter()
     if state.view is None:
@@ -129,6 +154,9 @@ def conclude(cfg: RunConfig, ctx: Context, state: RunState, log: Log) -> None:
         return
     verdict = "goal achieved" if state.answer.achieved else "goal not achieved"
     log(f"\nanswer ({verdict}, {time.perf_counter() - started:.1f}s):\n  {state.answer.text}")
+    if cfg.speak and state.answer and state.answer.text:
+        from . import speech
+        speech.speak(state.answer.text, wait=True)
 
 
 def run_step(cfg: RunConfig, ctx: Context, state: RunState, step: int, log: Log) -> bool:
@@ -149,6 +177,10 @@ def run_step(cfg: RunConfig, ctx: Context, state: RunState, step: int, log: Log)
         decision = decide(ctx.typesafe, cfg.goal, screen, items, state.history, ctx.browser, ctx.email)
     by_index = {str(it.index): it for it in items}
     annotate(screen, items, decision.chosen, prefix.with_suffix(".png"))
+
+    if cfg.speak:
+        from . import speech
+        speech.speak(f"Step {step}, choosing action {decision.chosen}", wait=False)
 
     field_desc = f" field={screen.field.role}:{screen.field.label!r}" if screen.field else ""
     log(
