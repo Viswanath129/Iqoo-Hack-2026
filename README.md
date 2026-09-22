@@ -18,7 +18,7 @@
   <a href="https://apple.com"><img src="https://img.shields.io/badge/macOS-Apple_Silicon-000000?style=flat-square&logo=apple&logoColor=white" alt="macOS" /></a>
   <a href="https://developer.android.com"><img src="https://img.shields.io/badge/Android-iQOO_15_%7C_ADB-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Android" /></a>
   <a href="https://www.qualcomm.com/snapdragon"><img src="https://img.shields.io/badge/Snapdragon-Hexagon_NPU_(45_TOPS)-E51937?style=flat-square&logo=qualcomm&logoColor=white" alt="Hexagon NPU" /></a>
-  <a href="#-testing--quality-assurance"><img src="https://img.shields.io/badge/Tests-396_Verified-10B981?style=flat-square&logo=pytest&logoColor=white" alt="Tests" /></a>
+  <a href="#-testing--quality-assurance"><img src="https://img.shields.io/badge/Tests-460_Verified-10B981?style=flat-square&logo=pytest&logoColor=white" alt="Tests" /></a>
   <a href="#-empirical-benchmarks-modes-a-vs-b-vs-c"><img src="https://img.shields.io/badge/Cost-$0.00_%2F_Step-059669?style=flat-square" alt="Zero Cost" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-F59E0B?style=flat-square" alt="MIT License" /></a>
 </p>
@@ -869,10 +869,10 @@ clicker-inspect
 
 ## 🧪 Testing & Quality Assurance
 
-JEVON maintains a strict **truth-first testing discipline** with **396 total verified tests**:
+JEVON maintains a strict **truth-first testing discipline** with **460 total verified tests**:
 
 ```bash
-# Run all unit tests (170 tests — zero regression policy)
+# Run all unit tests (234 tests — zero regression policy)
 uv run pytest -q
 
 # Run unit tests excluding mouse-moving interactive tests
@@ -886,12 +886,12 @@ python -m e2e.runner
 
 | Test Tier | Scope | Total Tests | Pass Rate |
 | :---: | :--- | :---: | :---: |
-| **Unit Suite** | Core decision providers, state ledger, platforms, OCR cache | 170 | **100%** (170/170) |
+| **Unit Suite** | Core decision providers, state ledger, platforms, OCR cache, bridge, execution, verification, telemetry | 234 | **100%** (234/234) |
 | **Tier 1 (Feature)** | Direct functional coverage (Features 1–20, 5 tests each) | 100 | **100%** (100/100) |
 | **Tier 2 (Boundary)** | Extreme inputs, timeouts, safety violations, corner cases | 100 | **100%** (100/100) |
 | **Tier 3 (Combination)** | Pairwise cross-module integration (Provider ↔ Bridge ↔ Ledger) | 20 | **100%** (20/20) |
 | **Tier 4 (Application)** | Real-world developer workloads (S1–S6 scenarios) | 6 | **100%** (6/6) |
-| **TOTAL** | Complete validation footprint | **396** | **100% Verified** (396/396) |
+| **TOTAL** | Complete validation footprint | **460** | **100% Verified** (460/460) |
 
 > [!TIP]
 > For in-depth test methodology, fixture details, and tier execution flags, see the [Testing Guide](docs/TESTING.md), [Test Infrastructure Specification](TEST_INFRA.md), and [Test Readiness Report](TEST_READY.md).
@@ -948,13 +948,13 @@ Iqoo-Hack-2026/
 │   ├── pitch.md                           # 3-minute stage pitch script & jury Q&A
 │   └── setup_officekit.md                 # iQOO Office Kit pairing & telemetry guide
 │
-├── tests/                                 # 170 Unit Tests (regression-locked)
+├── tests/                                 # 234 Unit Tests (regression-locked)
 ├── e2e/                                   # 226 Opaque-Box E2E Tests (Tiers 1–4)
 │
 ├── PROJECT.md                             # Master 23-feature inventory & milestone dependencies
 ├── PROJECT_OVERVIEW.md                    # Platform comparison & edge AI capabilities
 ├── ORIGINAL_REQUEST.md                    # Full R1–R6 hackathon requirements specification
-├── TEST_READY.md                          # Comprehensive test readiness report (396/396 verified)
+├── TEST_READY.md                          # Comprehensive test readiness report (460/460 verified)
 ├── TEST_INFRA.md                          # 4-tier E2E testing architecture & philosophy
 ├── CONTRIBUTING.md                        # Contribution & coding standards
 ├── LICENSE                                # MIT License & Aaron Levin attribution
@@ -996,7 +996,7 @@ Explore the comprehensive technical documentation available in the repository:
 | **Original Requirements** | Full R1–R6 hackathon requirements specification | [ORIGINAL_REQUEST.md](ORIGINAL_REQUEST.md) |
 | **Project Blueprint** | Feature inventory (23 features) and milestone tracking | [PROJECT.md](PROJECT.md) |
 | **System Overview** | Platform comparison and edge AI capabilities | [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) |
-| **Test Readiness Report** | 396 verified test suite status, runner options, and pass rate | [TEST_READY.md](TEST_READY.md) |
+| **Test Readiness Report** | 460 verified test suite status, runner options, and pass rate | [TEST_READY.md](TEST_READY.md) |
 | **E2E Test Infrastructure** | 4-tier test architecture, philosophy, and test fixtures | [TEST_INFRA.md](TEST_INFRA.md) |
 | **Office Kit Pairing Guide** | iQOO 15 phone pairing, display mirroring, and telemetry | [hackathon/setup_officekit.md](hackathon/setup_officekit.md) |
 | **Stage Pitch Script** | 3-minute presentation script and anticipated jury Q&A | [hackathon/pitch.md](hackathon/pitch.md) |
