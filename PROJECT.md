@@ -57,7 +57,7 @@ Every requirement from `ORIGINAL_REQUEST.md` (R1-R6) is inventoried and mapped t
 
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| M1 | Core Decision Engine & Truth-First State | `jevon/decision/` (`DecisionProvider`, `LocalDecisionProvider`, `TypeSafeJevProvider`, `SafetyFallback`, 8 actions, probability distribution) and `jevon/truth_first/` (7-pillar ledger) | none | PLANNED |
+| M1 | Core Decision Engine & Truth-First State | `jevon/decision/` (`DecisionProvider`, `LocalDecisionProvider`, `TypeSafeJevProvider`, `SafetyFallback`, 8 actions, probability distribution) and `jevon/truth_first/` (7-pillar ledger) | none | IN_PROGRESS |
 | M2 | OfficeKitBridge & Dual-Device Telemetry | `jevon/bridge/` (`OfficeKitBridge`, `AdbTunnelTransport`, `SocketTransport`, `IpcTransport`, `StateObservation`, `DecisionCommand`, `ActionReceipt`) | M1 | PLANNED |
 | M3 | Laptop Action Execution & Verification Engine | `jevon/execution/` (`LaptopActionExecutor`, failsafe bounds, mouse corner, `SafetyGate`) and `jevon/verification/` (`VerificationEngine`, regex, exit code, AST, git diff) + closed loop | M1, M2 | PLANNED |
 | M4 | On-Device Perception & Voice Pipeline | `jevon/perception/` (`npu_detector.py`, Whisper STT, TTS audio, terminal error parser) | M1 | PLANNED |
