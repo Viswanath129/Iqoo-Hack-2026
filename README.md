@@ -376,9 +376,9 @@ clicker-inspect
 - [x] Local SLM integration (`slm_decide.py` with ONNX GenAI and GGUF)
 - [x] On-device Whisper STT and TTS voice loop
 - [x] 7-Pillar Truth-First state model & 8-action developer decision space
-- [ ] Office Kit bi-directional socket bridge for dual-device phone-to-laptop pairing
-- [ ] Independent AST syntax and test verification module (`verification/`)
-- [ ] Nanosecond micro-benchmark telemetry suite (Modes A, B, C comparison)
+- [x] Office Kit bi-directional socket bridge for dual-device phone-to-laptop pairing
+- [x] Independent AST syntax and test verification module (`verification/`)
+- [x] Nanosecond micro-benchmark telemetry suite (Modes A, B, C comparison)
 
 ---
 
