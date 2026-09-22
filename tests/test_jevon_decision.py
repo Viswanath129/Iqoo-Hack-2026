@@ -1,5 +1,6 @@
 """Comprehensive unit tests for JEVON Core Decision Engine & Bounded Action Space (R1)."""
 
+import math
 import pytest
 
 from jevon.decision.actions import (
@@ -142,6 +143,40 @@ def test_developer_decision_serialization_roundtrip() -> None:
     assert reconstructed.parameters == original.parameters
     assert reconstructed.metadata == original.metadata
     assert Decision is DeveloperDecision
+
+
+def test_developer_decision_json_serialization_roundtrip() -> None:
+    """DeveloperDecision must roundtrip through JSON string serialization."""
+    original = DeveloperDecision(
+        action=DeveloperAction.APPLY_FIX,
+        confidence=0.92,
+        probabilities={"apply_fix": 0.92, "done": 0.08},
+        parameters={"target_file": "jevon/actions.py", "patch": "diff"},
+        metadata={"session_id": "test_json_sess"},
+    )
+    json_str = original.to_json()
+    assert isinstance(json_str, str)
+    reconstructed = DeveloperDecision.from_json(json_str)
+
+    assert reconstructed.action == original.action
+    assert math.isclose(reconstructed.confidence, original.confidence, abs_tol=1e-6)
+    assert reconstructed.parameters == original.parameters
+    assert reconstructed.metadata == original.metadata
+
+
+def test_developer_decision_nan_inf_confidence_clamping() -> None:
+    """DeveloperDecision must clamp NaN and Inf confidence to 0.0."""
+    d_nan = DeveloperDecision(action=DeveloperAction.INSPECT_ERROR, confidence=float("nan"))
+    assert d_nan.confidence == 0.0
+    assert d_nan.requires_confirmation is True
+
+    d_inf = DeveloperDecision(action=DeveloperAction.INSPECT_ERROR, confidence=float("inf"))
+    assert d_inf.confidence == 0.0
+    assert d_inf.requires_confirmation is True
+
+    d_neginf = DeveloperDecision(action=DeveloperAction.INSPECT_ERROR, confidence=float("-inf"))
+    assert d_neginf.confidence == 0.0
+    assert d_neginf.requires_confirmation is True
 
 
 # ============================================================================

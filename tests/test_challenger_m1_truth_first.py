@@ -223,12 +223,9 @@ def test_failure_signature_scale_collision_resistance() -> None:
 
 
 def test_failure_signature_delimiter_injection_vulnerability() -> None:
-    """VULNERABILITY PROOF: Delimiter injection in culprit_file / error_summary causes signature collisions.
+    """[REMEDIATED] JSON serialization prevents delimiter injection collisions in compute_failure_signature.
     
-    Because compute_failure_signature uses unescaped '|err:' delimiter formatting:
-    `raw = f"code:{exit_code}|file:{culprit_file or ''}|err:{error_summary or ''}".strip()`
-    
-    If culprit_file contains '|err:', it can collide with an input where that text is part of error_summary!
+    Using json.dumps([exit_code, norm_file, error_summary]) safely delimits fields and escapes special chars.
     """
     exit_code = 1
     # Input A: culprit_file contains delimiter '|err:' and error_summary is 'baz'
@@ -245,21 +242,17 @@ def test_failure_signature_delimiter_injection_vulnerability() -> None:
     # Empirical check: These are distinct error contexts
     assert (file_a, err_a) != (file_b, err_b)
 
-    # Delimiter collision: Both produce raw string 'code:1|file:module.py|err:bar|err:baz'
-    # Demonstrating the existence of delimiter injection collision:
-    assert sig_a == sig_b, (
-        f"Delimiter collision confirmed: sig_a ({sig_a}) == sig_b ({sig_b}) despite distinct inputs!"
-    )
+    # Delimiter collision is prevented: signatures are distinct
+    assert sig_a != sig_b
 
 
 def test_failure_signature_path_separator_sensitivity() -> None:
-    """Investigate whether Windows vs POSIX path separators produce distinct signatures for the same file."""
+    """[REMEDIATED] Windows vs POSIX path separators are normalized to produce consistent signatures."""
     sig_windows = compute_failure_signature(1, "jevon\\decision\\actions.py", "SyntaxError")
     sig_posix = compute_failure_signature(1, "jevon/decision/actions.py", "SyntaxError")
 
-    # Because compute_failure_signature does not normalize slashes, these produce distinct signatures:
-    # This means a tool running on Windows vs WSL/Linux will record different failure signatures.
-    assert sig_windows != sig_posix
+    # Path normalization ensures Windows and POSIX paths match
+    assert sig_windows == sig_posix
 
 
 # ==============================================================================
@@ -268,14 +261,10 @@ def test_failure_signature_path_separator_sensitivity() -> None:
 
 
 def test_oscillation_detection_stagnation_vs_true_oscillation() -> None:
-    """EMPIRICAL CHALLENGE: Verify detect_oscillation behavior on A -> A -> A vs A -> B -> A -> B.
+    """[REMEDIATED] Verify detect_oscillation detects both single-action stagnation and periodic cycling.
     
-    The method TruthFirstState.detect_oscillation is implemented as:
-        recent_actions = [d.get("action") for d in self.decisions[-window:]]
-        return len(set(recent_actions)) == 1
-        
-    This means it detects STAGNATION (A -> A -> A), but COMPLETELY MISSES
-    alternating oscillation cycles (A -> B -> A -> B).
+    TruthFirstState.detect_oscillation detects single-action stagnation (A -> A -> A)
+    AND periodic cycling (2-cycles A -> B -> A -> B and 3-cycles).
     """
     state_stagnation = TruthFirstState()
     for _ in range(4):
@@ -297,33 +286,23 @@ def test_oscillation_detection_stagnation_vs_true_oscillation() -> None:
     for action in cycling_sequence:
         state_cycling.record_decision(action)
 
-    # Empirical finding: detect_oscillation returns False on cycling ping-pong!
+    # Periodic cycling is now detected:
     is_cycling_detected = state_cycling.detect_oscillation(window=3)
-    assert is_cycling_detected is False, (
-        "TruthFirstState.detect_oscillation failed to detect ping-pong cycling (A -> B -> A -> B) "
-        "because it only tests len(set(recent_actions)) == 1!"
+    assert is_cycling_detected is True, (
+        "TruthFirstState.detect_oscillation must detect ping-pong cycling (A -> B -> A -> B)"
     )
 
     is_cycling_detected_w4 = state_cycling.detect_oscillation(window=4)
-    assert is_cycling_detected_w4 is False
+    assert is_cycling_detected_w4 is True
 
     is_cycling_detected_w6 = state_cycling.detect_oscillation(window=6)
-    assert is_cycling_detected_w6 is False
+    assert is_cycling_detected_w6 is True
 
 
 def test_safety_fallback_oscillation_guard_blindness_to_cycles() -> None:
-    """EMPIRICAL CHALLENGE: Verify SafetyFallback oscillation loop guard behavior on cycling decisions.
+    """[REMEDIATED] Verify SafetyFallback oscillation loop guard intercepts periodic cycling decisions.
     
-    SafetyFallback defines loop guard as:
-        recent_actions = [d.action for d in self._history[-(self.oscillation_threshold - 1):]] + [decision.action]
-        if (
-            len(recent_actions) >= self.oscillation_threshold
-            and len(set(recent_actions)) == 1
-            and decision.action != DeveloperAction.DONE
-        ):
-    
-    Like TruthFirstState, SafetyFallback only intercepts repetition of the SAME action.
-    An infinite alternating cycle (inspect_error <-> inspect_file) is NEVER intercepted by SafetyFallback!
+    SafetyFallback intercepts both single-action stagnation and alternating cycles (A -> B -> A -> B).
     """
     class CyclingProvider(DecisionProvider):
         """Mock provider that ping-pongs between INSPECT_ERROR and INSPECT_FILE."""
@@ -373,14 +352,13 @@ def test_safety_fallback_oscillation_guard_blindness_to_cycles() -> None:
         decision = fallback_guard.decide(dummy_state, dummy_obs)
         emitted_decisions.append(decision)
 
-    # Empirical finding: None of the 10 alternating decisions was intercepted as loop_detected!
+    # Empirical finding: Alternating decisions ARE intercepted as loop_detected!
     loop_intercepts = [
         d for d in emitted_decisions
         if d.metadata.get("safety_override") == "oscillation_detected"
     ]
-    assert len(loop_intercepts) == 0, (
-        "SafetyFallback failed to intercept alternating oscillation (A -> B -> A -> B) "
-        "because its loop guard only checks len(set(recent_actions)) == 1!"
+    assert len(loop_intercepts) > 0, (
+        "SafetyFallback must intercept alternating oscillation (A -> B -> A -> B)"
     )
 
 
@@ -425,15 +403,10 @@ def test_truth_first_state_direct_pillar_mutability() -> None:
 
 
 def test_truth_first_state_to_dict_shallow_copy_leakage() -> None:
-    """EMPIRICAL CHALLENGE: Verify whether to_dict() returns deep or shallow copies of nested collections.
+    """[REMEDIATED] Verify that to_dict() returns deep copies of nested collections.
     
-    In to_dict():
-        'decisions': list(self.decisions)
-        'failed_approaches': list(self.failed_approaches)
-        'metadata': dict(self.metadata)
-        
-    `list(self.decisions)` is a shallow copy. Modifying the inner dictionaries in the returned
-    dict mutates the internal state of TruthFirstState!
+    Using copy.deepcopy for decisions, failed_approaches, and metadata guarantees
+    that tampering with exported dictionaries does not leak into TruthFirstState.
     """
     state = TruthFirstState(
         goal="Audit integrity test",
@@ -459,29 +432,15 @@ def test_truth_first_state_to_dict_shallow_copy_leakage() -> None:
     # Tamper with failed_approaches
     exported_dict["failed_approaches"][0]["reason"] = "TAMPERED_REASON"
 
-    # Empirical check: Did the internal state get mutated via shallow-copy leakage?
-    # Note: exported_dict["decisions"][0] is the exact same dictionary object!
-    assert state.decisions[0]["action"] == "TAMPERED_ACTION", (
-        "VULNERABILITY: Modifying to_dict()['decisions'][0] directly mutated state.decisions[0]!"
-    )
-    assert state.decisions[0]["parameters"]["nested_opt"]["safety"] is False, (
-        "VULNERABILITY: Modifying nested parameters in to_dict() directly mutated state.decisions[0]['parameters']!"
-    )
-    assert state.metadata["config"]["timeout_s"] == 9999, (
-        "VULNERABILITY: Modifying nested metadata in to_dict() directly mutated state.metadata!"
-    )
-    assert state.failed_approaches[0]["reason"] == "TAMPERED_REASON", (
-        "VULNERABILITY: Modifying failed_approaches in to_dict() directly mutated state.failed_approaches!"
-    )
+    # Empirical check: Internal state is isolated from shallow-copy leakage
+    assert state.decisions[0]["action"] == DeveloperAction.APPLY_FIX.value
+    assert state.decisions[0]["parameters"]["nested_opt"]["safety"] is True
+    assert state.metadata["config"]["timeout_s"] == 30
+    assert state.failed_approaches[0]["reason"] == "Failed syntax check"
 
 
 def test_truth_first_state_from_dict_shallow_aliasing() -> None:
-    """EMPIRICAL CHALLENGE: Verify whether from_dict() shallow-aliases incoming nested collections.
-    
-    When reconstructed via from_dict(data):
-        decisions=list(data.get("decisions", []))
-    If the caller subsequently modifies `data["decisions"]`, does it affect the reconstructed state?
-    """
+    """[REMEDIATED] Verify that from_dict() deep-copies incoming nested collections to prevent aliasing."""
     source_data: dict[str, Any] = {
         "goal": "Reconstruction test",
         "decisions": [
@@ -495,9 +454,8 @@ def test_truth_first_state_from_dict_shallow_aliasing() -> None:
     # Caller modifies source_data after construction
     source_data["decisions"][0]["action"] = "MODIFIED_AFTER_FROM_DICT"
 
-    assert state.decisions[0]["action"] == "MODIFIED_AFTER_FROM_DICT", (
-        "VULNERABILITY: Modifying source_data after from_dict() directly mutated reconstructed TruthFirstState!"
-    )
+    # Empirical check: reconstructed state is untouched
+    assert state.decisions[0]["action"] == "inspect_error"
 
 
 def test_json_roundtrip_isolates_memory() -> None:
