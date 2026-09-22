@@ -104,7 +104,10 @@ def speak(text: str, wait: bool = True) -> None:
 
             # Fallback to PowerShell SAPI
             try:
-                ps_script = f'Add-Type -AssemblyName System.speech; $speak = New-Object System.Speech.Synthesis.SpeechSynthesizer; $speak.Speak("{text.replace(chr(34), "")}")'
+                safe_text = text.replace(chr(34), "")
+                for ch in ("$", "`", "(", ")", "{", "}"):
+                    safe_text = safe_text.replace(ch, "")
+                ps_script = f'Add-Type -AssemblyName System.speech; $speak = New-Object System.Speech.Synthesis.SpeechSynthesizer; $speak.Speak("{safe_text}")'
                 subprocess.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps_script], capture_output=True)
                 return
             except Exception:

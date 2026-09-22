@@ -133,6 +133,24 @@ class ClosedLoopOrchestrator:
                         cmd_str = "python -m py_compile " + (received_cmd.parameters.get("target_file") or "calc.py")
                     elif received_cmd.action == DeveloperAction.RUN_TARGETED_TEST:
                         cmd_str = "pytest " + (received_cmd.parameters.get("target_test") or "test_calc.py")
+                    elif received_cmd.action == DeveloperAction.INSPECT_ERROR:
+                        error_text = received_cmd.parameters.get("error_text", "")
+                        cmd_str = f'python -c "print({error_text[:200]!r})"' if error_text else "echo No error text"
+                    elif received_cmd.action == DeveloperAction.INSPECT_FILE:
+                        target_file = received_cmd.parameters.get("target_file", "")
+                        if target_file:
+                            cmd_str = f'python -c "print(open({target_file!r}).read())"'
+                        else:
+                            cmd_str = "echo No target file specified"
+                    elif received_cmd.action == DeveloperAction.INSPECT_RECENT_CHANGE:
+                        cmd_str = received_cmd.parameters.get("git_command", "git diff HEAD~1")
+                    elif received_cmd.action == DeveloperAction.APPLY_FIX:
+                        fix_patch = received_cmd.parameters.get("fix_patch", "")
+                        target_file = received_cmd.parameters.get("target_file", "")
+                        if fix_patch and target_file:
+                            cmd_str = f'python -c "open({target_file!r}, \'a\').write({fix_patch!r})"'
+                        else:
+                            cmd_str = "echo No fix patch or target file specified"
                     else:
                         cmd_str = "git status"
 

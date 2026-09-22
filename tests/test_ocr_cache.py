@@ -210,7 +210,7 @@ def test_ocr_crop_offsets_boxes_back_into_full_capture_coordinates(monkeypatch):
     monkeypatch.setattr(perception.ocrmac, "OCR", FakeOCR)
     ((text, conf, box),) = ocr_crop(Image.new("RGB", (1000, 800)), (300.0, 400.0, 500.0, 500.0))
     assert (text, conf) == ("hello", 0.9)
-    assert box == (310.0, 420.0, 360.0, 450.0)
+    assert box == (310.0, 420.0, 370.0, 470.0)
 
 
 # ------------------------------------------------------------------ the reuse decision

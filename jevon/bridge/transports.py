@@ -44,7 +44,12 @@ class BridgeTransport(ABC):
 
 
 class IpcTransport(BridgeTransport):
-    """Local IPC transport using in-memory queues for standalone execution and testing."""
+    """Local IPC transport using in-memory queues for standalone execution and testing.
+
+    In standalone mode both send() and receive() share the same direction.
+    For dual-endpoint usage, call peer_view() to create the complementary transport
+    where send/receive queues are swapped.
+    """
 
     def __init__(self) -> None:
         self._c2s: queue.Queue[bytes] = queue.Queue()
@@ -76,15 +81,28 @@ class IpcTransport(BridgeTransport):
         except queue.Empty as err:
             raise TimeoutError(f"IpcTransport receive timed out after {timeout_s}s") from err
 
+    def peer_view(self) -> "IpcTransport":
+        """Return a transport that reads from this one's send queue and writes to this one's receive queue."""
+        peer = IpcTransport.__new__(IpcTransport)
+        peer._c2s = self._s2c  # peer sends to our receive queue
+        peer._s2c = self._c2s  # peer receives from our send queue
+        peer._connected = self._connected
+        return peer
+
 
 class SocketTransport(BridgeTransport):
-    """Office Kit TCP socket transport with binary length-prefixed framing."""
+    """Office Kit TCP socket transport with binary length-prefixed framing.
+
+    Uses separate send/receive buffers for each side. Use create_pair() for proper
+    bidirectional communication between two endpoints.
+    """
 
     def __init__(self, host: str = "127.0.0.1", port: int = 9876) -> None:
         self.host = host
         self.port = port
         self._connected = False
-        self._buffer = bytearray()
+        self._send_buffer = bytearray()
+        self._recv_buffer = bytearray()
         self._lock = threading.Lock()
 
     def connect(self) -> bool:
@@ -95,7 +113,8 @@ class SocketTransport(BridgeTransport):
     def disconnect(self) -> None:
         with self._lock:
             self._connected = False
-            self._buffer = bytearray()
+            self._send_buffer = bytearray()
+            self._recv_buffer = bytearray()
 
     def is_connected(self) -> bool:
         with self._lock:
@@ -106,7 +125,7 @@ class SocketTransport(BridgeTransport):
             if not self._connected:
                 raise ConnectionError("SocketTransport not connected")
             length_prefix = len(data).to_bytes(4, byteorder="big")
-            self._buffer.extend(length_prefix + data)
+            self._send_buffer.extend(length_prefix + data)
 
     def receive(self, timeout_s: float = 5.0) -> bytes:
         start_time = time.monotonic()
@@ -114,16 +133,30 @@ class SocketTransport(BridgeTransport):
             with self._lock:
                 if not self._connected:
                     raise ConnectionError("SocketTransport not connected")
-                if len(self._buffer) >= 4:
-                    length = int.from_bytes(self._buffer[:4], byteorder="big")
-                    if len(self._buffer) >= 4 + length:
-                        data = bytes(self._buffer[4 : 4 + length])
-                        del self._buffer[: 4 + length]
+                if len(self._recv_buffer) >= 4:
+                    length = int.from_bytes(self._recv_buffer[:4], byteorder="big")
+                    if len(self._recv_buffer) >= 4 + length:
+                        data = bytes(self._recv_buffer[4 : 4 + length])
+                        del self._recv_buffer[: 4 + length]
                         return data
 
             if time.monotonic() - start_time > timeout_s:
                 raise TimeoutError(f"SocketTransport receive timed out after {timeout_s}s")
             time.sleep(0.005)
+
+    @classmethod
+    def create_pair(cls, host: str = "127.0.0.1", port: int = 9876) -> tuple["SocketTransport", "SocketTransport"]:
+        """Create a pair of connected SocketTransports where each side's send buffer is the other's receive buffer."""
+        a = cls(host, port)
+        b = cls(host, port)
+        # Cross-wire: a's send buffer is b's receive buffer and vice versa
+        a._send_buffer = bytearray()
+        b._recv_buffer = a._send_buffer
+        b._send_buffer = bytearray()
+        a._recv_buffer = b._send_buffer
+        a._lock = b._lock = threading.Lock()
+        a._connected = b._connected = True
+        return a, b
 
 
 class AdbTunnelTransport(BridgeTransport):

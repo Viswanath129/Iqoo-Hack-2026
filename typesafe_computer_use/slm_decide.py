@@ -250,7 +250,12 @@ def parse_slm_response(
         data = json.loads(json_match.group())
     except json.JSONDecodeError:
         # Try fixing common JSON issues (single quotes, trailing commas)
-        fixed = json_match.group().replace("'", '"')
+        fixed = json_match.group()
+        # Only replace single quotes that act as JSON structural delimiters
+        # (adjacent to colons, commas, braces, brackets, or at string boundaries)
+        # rather than blindly replacing all single quotes which corrupts apostrophes.
+        fixed = re.sub(r"(?<=[\[{,:])\s*'|'\s*(?=[,\]{}:])", '"', fixed)
+        fixed = re.sub(r"^'|'$", '"', fixed)
         fixed = re.sub(r",\s*}", "}", fixed)
         fixed = re.sub(r",\s*]", "]", fixed)
         try:

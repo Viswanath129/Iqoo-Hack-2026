@@ -111,7 +111,7 @@ def ocr_crop(image: Image.Image, rect: tuple[float, float, float, float]) -> lis
         from ocrmac import ocrmac
 
         raw = ocrmac.OCR(crop, recognition_level="accurate").recognize(px=True)
-        return [(text, conf, (b[0] + x1, b[1] + y1, b[2] + x1, b[3] + y1)) for text, conf, b in raw]
+        return [(text, conf, (b[0] + x1, b[1] + y1, b[0] + b[2] + x1, b[1] + b[3] + y1)) for text, conf, b in raw]
 
     if _WINRT_OCR_AVAILABLE and _async_worker is not None:
         with _ocr_lock:

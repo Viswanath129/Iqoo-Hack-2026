@@ -11,6 +11,7 @@ Zero fabricated or unverified NPU claims.
 from __future__ import annotations
 
 import importlib.util
+import os
 import sys
 from pathlib import Path
 
@@ -27,7 +28,7 @@ class NpuDetector:
     def detect_runtime_tier(cls) -> str:
         """Inspects environment and returns the real active execution tier."""
         # Tier 1: Check for Qualcomm Hexagon NPU runtime and model files
-        qnn_path = Path("B:/projects/Qualcomm/whisper_bundle")
+        qnn_path = Path(os.environ.get("QNN_BUNDLE_PATH", "B:/projects/Qualcomm/whisper_bundle"))
         qnn_installed = False
         try:
             qnn_installed = importlib.util.find_spec("onnxruntime_qnn") is not None

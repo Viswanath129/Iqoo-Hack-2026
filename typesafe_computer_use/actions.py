@@ -142,7 +142,7 @@ def _extract_local_text(goal: str) -> str:
         "find ",
     ]
     if " and " in g_lower:
-        part = g.split(" and ", 1)[1].strip()
+        part = g[g_lower.index(" and ") + 5:].strip()
         for trig in triggers:
             if trig in part.lower():
                 idx = part.lower().index(trig) + len(trig)

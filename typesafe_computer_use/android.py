@@ -141,7 +141,7 @@ def _parse_bounds(bounds_input: str | tuple[float, float, float, float]) -> tupl
     """Parse bounds string like [0,0][1080,2400] to (x, y, w, h), or pass through tuple."""
     if isinstance(bounds_input, (tuple, list)):
         return tuple(float(v) for v in bounds_input)
-    match = re.match(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]", str(bounds_input))
+    match = re.match(r"\[(-?\d+),(-?\d+)\]\[(-?\d+),(-?\d+)\]", str(bounds_input))
     if not match:
         return 0.0, 0.0, 0.0, 0.0
     left, top, right, bottom = map(float, match.groups())

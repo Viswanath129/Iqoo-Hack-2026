@@ -99,3 +99,18 @@ class LaptopActionExecutor:
                 verification_details={"timeout": True},
                 duration_ns=duration_ns,
             )
+        except RuntimeError as e:
+            duration_ns = time.perf_counter_ns() - t0
+            return ActionReceipt(
+                command_id="cmd_aborted",
+                session_id="",
+                step_index=0,
+                action=DeveloperAction.RERUN_BUILD,
+                status="ABORTED",
+                exit_code=130,
+                stdout="",
+                stderr=str(e),
+                verification_passed=False,
+                verification_details={"aborted": True},
+                duration_ns=duration_ns,
+            )

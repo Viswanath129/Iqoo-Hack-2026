@@ -257,7 +257,7 @@ def ocr_crop(image: Image.Image, rect: Box) -> list[Line]:
     crop = image if (x1, y1, x2, y2) == (0, 0, image.width, image.height) else image.crop((x1, y1, x2, y2))
     if getattr(ocrmac, "OCR", None) is not None:
         raw = ocrmac.OCR(crop, recognition_level="accurate").recognize(px=True)
-        return [(text, conf, (b[0] + x1, b[1] + y1, b[2] + x1, b[3] + y1)) for text, conf, b in raw]
+        return [(text, conf, (b[0] + x1, b[1] + y1, b[0] + b[2] + x1, b[1] + b[3] + y1)) for text, conf, b in raw]
     return _npu_ocr_crop(image, rect)
 
 
