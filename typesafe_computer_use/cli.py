@@ -133,7 +133,7 @@ def inspect(argv: list[str] | None = None) -> None:
     text = args.out / "state.txt"
     screen.image.save(args.out / "raw.png")
     annotate(screen, items, chosen="", out=annotated)
-    text.write_text(render_payload(args.goal, screen, items, [], browser, config.email()))
+    text.write_text(render_payload(args.goal, screen, items, [], browser, config.email()), encoding="utf-8")
 
     print(
         f"app={screen.app!r} url={screen.url!r} items={len(items)} ax={ax_count(items)} "

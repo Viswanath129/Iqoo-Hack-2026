@@ -214,8 +214,8 @@ sequenceDiagram
 | **6–7** | **`DecisionCommand`** | Phone ➔ Bridge ➔ Laptop | Typed action, target coordinates/file, parameters | **~1.5 ms** | Transport auto-reconnect retry queue |
 | **8** | **Safety Gate Check** | Laptop (Pre-Execution) | Checks mouse pointer $\ne (0,0)$, step count $< 100$ | **0.6 ms** | Immediate hardware interrupt on corner abort |
 | **9** | **Deterministic Action** | Laptop ➔ Target OS | Win32 `SendInput`, macOS Quartz, or ADB keyevents | **185.0 ms** | 30-second isolated subprocess ceiling |
-| **10–11**| **Objective Verification** | Laptop ➔ Verification Engine | Checks exit code $== 0$, stdout regex, AST diff | **62.1 ms** | Zero self-certification rule |
-| **12–13**| **`ActionReceipt`** | Laptop ➔ Bridge ➔ Phone | Execution status, stdout/stderr, verification flag | **~1.5 ms** | Marshaled over USB tunnel or TCP socket |
+| **10–11** | **Objective Verification** | Laptop ➔ Verification Engine | Checks exit code $== 0$, stdout regex, AST diff | **62.1 ms** | Zero self-certification rule |
+| **12–13** | **`ActionReceipt`** | Laptop ➔ Bridge ➔ Phone | Execution status, stdout/stderr, verification flag | **~1.5 ms** | Marshaled over USB tunnel or TCP socket |
 | **14** | **Ledger Fact Update** | Phone (Truth Ledger) | Records output, computes 16-char SHA-256 error hash | **3.2 ms** | Oscillation loop detection breaker |
 | **15** | **Audio TTS Feedback** | Phone ➔ Developer | Local speech synthesizer emits audible confirmation | **Async** | Spoken task completion without context-switching |
 
@@ -257,6 +257,7 @@ The bridge layer ([`jevon/bridge/transports.py`](jevon/bridge/transports.py)) de
 All inter-device communication is strictly governed by dataclass JSON schemas defined in [`jevon/bridge/protocol.py`](jevon/bridge/protocol.py):
 
 #### 1. `DecisionCommand` (Phone ➔ Laptop)
+
 ```json
 {
   "command_id": "cmd_8f9c10a4",
@@ -272,6 +273,7 @@ All inter-device communication is strictly governed by dataclass JSON schemas de
 ```
 
 #### 2. `ActionReceipt` (Laptop ➔ Phone)
+
 ```json
 {
   "command_id": "cmd_8f9c10a4",
@@ -440,28 +442,33 @@ JEVON organizes all subsystem capabilities into 5 modular, independently testabl
 | **L5** | **Independent Verification** | AST parser, Exit code checks, Regex, pyttsx3 / WinRT TTS | Native OS runtime, Python stdlib `ast`, Audio subsystems | **~62 ms** |
 
 #### Layer 1 · Developer Intent (Zero-Cloud Ingestion)
+
 - **Voice Ingestion:** Streams raw PCM audio through local Whisper STT, accelerated directly on the Qualcomm Hexagon NPU (45 TOPS) on Snapdragon 8 Elite hardware via [`jevon/perception/voice.py`](jevon/perception/voice.py) with sub-200ms latency.
 - **CLI Commands:** Directly invokes targeted actions through [`jevon/cli.py`](jevon/cli.py) (`clicker "fix syntax in auth.py" --act --local`).
 
 #### Layer 2 · Multi-Modal Perception Engine
+
 - **DPI-Aware Capture:** Captures exact pixel arrays across single- and multi-monitor setups handling high-DPI scaling via `mss`.
 - **Accessibility Hierarchy:** Traverses the Windows UIAutomation COM tree (`IUIAutomation`), macOS `AXUIElement`, and Android `uiautomator dump` to locate buttons, inputs, and terminals.
 - **Hardware OCR:** WinRT Direct3D-accelerated OCR tile caching extracts text on modified display regions without redundant CPU re-scans.
 - **Terminal Error Parser:** Dedicated regex extractor ([`jevon/perception/extractor.py`](jevon/perception/extractor.py)) isolates filepaths, line numbers, and compiler stack traces.
 
 #### Layer 3 · Bounded Decision Core & State Ledger
+
 - **On-Device SLM:** Runs an offline Qwen 2.5 (0.5B) language model using ONNX Runtime or GGUF quantization.
 - **Deterministic 7-Rule FSM:** Zero-cloud heuristic ([`jevon/decision/local_provider.py`](jevon/decision/local_provider.py)) evaluating next steps in **12.4 ms** with zero prompt drift.
 - **8 Bounded Actions:** Restricts output space to 8 strictly typed, machine-executable operations ([`jevon/decision/actions.py`](jevon/decision/actions.py)).
 - **7-Pillar Truth-First Ledger:** Tracks goals, constraints, verified facts, decisions, evidence, open questions, and failure signatures in an immutable append-only ledger ([`jevon/truth_first/state.py`](jevon/truth_first/state.py)).
 
 #### Layer 4 · Deterministic Executor & 7-Layer Safety Gate
+
 - **Native OS Input Injection:** Simulates microsecond-level mouse and keyboard events via `Win32 SendInput` on Windows, Quartz/AppleScript on macOS, and ADB Shell on Android ([`jevon/execution/executor.py`](jevon/execution/executor.py)).
 - **Subprocess Isolation:** Launches test runners, compilers, and Git operations in isolated non-blocking subprocesses with 30-second ceilings.
 - **Hardware Mouse Corner Abort:** Physical mouse movement to `(x <= 10, y <= 10)` triggers an immediate hardware interrupt, halting execution within milliseconds.
 - **SafetyGate Defense:** Blocks destructive patterns (`git reset --hard`, `rm -rf /`, modifications to `.env` or root directories) via [`jevon/execution/safety_gate.py`](jevon/execution/safety_gate.py).
 
 #### Layer 5 · Independent Verification & Real-Time Feedback
+
 - **Zero Self-Certification:** Every action must be audited by an independent engine ([`jevon/verification/engine.py`](jevon/verification/engine.py)) before advancing the state ledger.
 - **Tri-Fold Validation:** Checks process exit codes (`== 0`), regex patterns on terminal outputs, and Python AST syntax tree correctness.
 - **Deterministic SHA-256 Signatures:** Hashes error states to detect repeating failure patterns and prevent oscillation loops.
@@ -547,7 +554,7 @@ If the maximum probability is below `0.60`, JEVON's `SafetyFallback` wrapper int
 
 ## 📓 7-Pillar Truth-First State Ledger
 
-Conventional coding assistants hallucinate and suffer from catastrophic forgetting because they treat conversation history as unstructured text. JEVON grounds all reasoning in a formal, **7-pillar immutable state ledger** ([`TruthFirstState`](jevon/truth_first/state.py)). 
+Conventional coding assistants hallucinate and suffer from catastrophic forgetting because they treat conversation history as unstructured text. JEVON grounds all reasoning in a formal, **7-pillar immutable state ledger** ([`TruthFirstState`](jevon/truth_first/state.py)).
 
 Every decision, OS fact, and compiler output is appended to an immutable audit trail, ensuring complete transparency, zero state regression, and deterministic loop breaking.
 
@@ -597,7 +604,7 @@ flowchart TD
 | **4** | **`DECISIONS`** | `list[dict]` | Chronological record of typed actions, normalized confidence, and rationale. | **Append-only** with UTC timestamps | 100% reproducible decision trace |
 | **5** | **`EVIDENCE`** | `list[str]` | Verbatim compiler errors, exit codes, AST structural diffs, and stack traces. | **Append-only**; exact string fidelity | Raw cryptographic audit proof |
 | **6** | **`OPEN_QUESTIONS`** | `list[str]` | Active diagnostic hypotheses currently being evaluated or tested. | Dynamically pruned as facts are verified | Bounds search exploration space |
-| **7** | **`FAILED_APPROACHES`**| `list[dict]` | Disproven patches and actions tagged with deterministic 16-character signatures. | **Append-only**; queried prior to action | Detects and breaks oscillation loops |
+| **7** | **`FAILED_APPROACHES`** | `list[dict]` | Disproven patches and actions tagged with deterministic 16-character signatures. | **Append-only**; queried prior to action | Detects and breaks oscillation loops |
 
 ---
 
@@ -970,6 +977,7 @@ Iqoo-Hack-2026/
 Explore the comprehensive technical documentation available in the repository:
 
 ### Core Architecture & Specifications
+
 | Document | Focus Area | Link |
 | :--- | :--- | :---: |
 | **Documentation Index** | Complete documentation catalog and brand identity | [docs/README.md](docs/README.md) |
@@ -991,6 +999,7 @@ Explore the comprehensive technical documentation available in the repository:
 | **File Structure** | Complete annotated codebase tree and subsystem inventory | [docs/FILE_STRUCTURE.md](docs/FILE_STRUCTURE.md) |
 
 ### Hackathon, Project & Test Resources
+
 | Document | Focus Area | Link |
 | :--- | :--- | :---: |
 | **Original Requirements** | Full R1–R6 hackathon requirements specification | [ORIGINAL_REQUEST.md](ORIGINAL_REQUEST.md) |
@@ -1049,13 +1058,14 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for full development guidelines.
 
 ## 📄 Attribution & License
 
-### Upstream Attribution
+| Component | Contributor / Source | Description |
+| :--- | :--- | :--- |
+| **JEV Framework & Code** | [Aaron Levin](https://github.com/awlevin) & Claude ([Anthropic](https://www.anthropic.com/)) | Foundational computer-use code & bounded classifier architecture ([`typesafe-computer-use`](https://github.com/awlevin/typesafe-computer-use)) |
+| **Edge AI Resources** | [Qualcomm AI Hub](https://aihub.qualcomm.com/) | Hexagon NPU-quantized models (Whisper STT, Qwen 2.5 SLM) & QAIRT runtimes |
 
-JEVON incorporates architecture and core OS interaction primitives derived from [`typesafe-computer-use`](https://github.com/awlevin/typesafe-computer-use) by **Aaron Levin**, licensed under the **MIT License**. We gratefully acknowledge Aaron Levin's pioneering work in accessibility-driven computer use and deterministic classifier-based interaction.
+### Independence & Trademarks
 
-### Independence Notice
-
-JEVON is an independent open-source project developed for the iQOO Hackathon 2026. While conceptually inspired by machine-consumable decision intelligence paradigms, JEVON is **not affiliated with, endorsed by, sponsored by, or owned by TypeSafe Inc.** All trademarks belong to their respective owners.
+JEVON is an independent open-source project developed for the iQOO Hackathon 2026. Snapdragon and Hexagon are trademarks of Qualcomm Incorporated. All trademarks belong to their respective owners.
 
 ### License
 
