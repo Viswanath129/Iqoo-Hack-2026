@@ -27,7 +27,6 @@ from jevon.decision.provider import DecisionProvider, StateObservation
 from jevon.decision.safety_fallback import SafetyFallback
 from jevon.truth_first.state import TruthFirstState
 
-
 # ===========================================================================
 # Feature 1 Boundary Cases: DecisionProvider
 # ===========================================================================

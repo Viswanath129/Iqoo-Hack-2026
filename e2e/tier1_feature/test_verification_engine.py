@@ -11,15 +11,12 @@ from __future__ import annotations
 import unittest
 
 from e2e.stubs import (
-    ActionReceipt,
     VerificationEngine,
-    VerificationOutcome,
 )
 from jevon.decision.actions import DeveloperAction, DeveloperDecision
 from jevon.decision.local_provider import LocalDecisionProvider
 from jevon.decision.provider import StateObservation
 from jevon.truth_first.state import TruthFirstState
-
 
 # ===========================================================================
 # Feature 14: VerificationEngine Independent Validation (R5)

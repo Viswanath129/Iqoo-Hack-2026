@@ -12,7 +12,6 @@ import unittest
 from unittest.mock import MagicMock
 
 from e2e.stubs import (
-    ActionReceipt,
     DecisionCommand,
     IpcTransport,
     OfficeKitBridge,

@@ -7,14 +7,13 @@ Total: 5 tests.
 
 from __future__ import annotations
 
-from pathlib import Path
 import sys
 import tempfile
 import unittest
+from pathlib import Path
 
 from e2e.fixtures import CLEAN_PROJECT_DIR
 from e2e.stubs import (
-    ActionReceipt,
     LaptopActionExecutor,
 )
 from jevon.decision.actions import DeveloperAction

@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none" role="img" aria-label="JEVON Minimal Logo">
+  <defs>
+    <!-- Dynamic iQOO Velocity Orange Gradient -->
+    <linearGradient id="jevOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF3700"/>
+      <stop offset="60%" stop-color="#FF5500"/>
+      <stop offset="100%" stop-color="#FFA200"/>
+    </linearGradient>
+
+    <!-- Cyber Cyan Bridge Gradient -->
+    <linearGradient id="jevCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F2FE"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+
+    <!-- Closed-Loop Orbital Feedback Gradient -->
+    <linearGradient id="loopStream" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F2FE" stop-opacity="0.95"/>
+      <stop offset="50%" stop-color="#818CF8" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#FF5500" stop-opacity="0.9"/>
+    </linearGradient>
+
+    <!-- Refined Minimal Glow Filters -->
+    <filter id="softGlow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <filter id="beaconGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="4.5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <style>
+      /* Dynamic Ambient CSS Animations */
+      @keyframes dashFlow {
+        from { stroke-dashoffset: 0; }
+        to { stroke-dashoffset: -44; }
+      }
+      @keyframes beaconBreathe {
+        0%, 100% { transform: scale(1); opacity: 0.85; }
+        50% { transform: scale(1.45); opacity: 1; }
+      }
+      @keyframes glowPulse {
+        0%, 100% { opacity: 0.65; }
+        50% { opacity: 0.95; }
+      }
+
+      .anim-loop {
+        stroke-dasharray: 14 8;
+        animation: dashFlow 3s linear infinite;
+      }
+      .anim-beacon {
+        transform-origin: 154px 60px;
+        animation: beaconBreathe 2.4s ease-in-out infinite;
+      }
+      .anim-glow {
+        animation: glowPulse 3s ease-in-out infinite;
+      }
+
+      /* Hover Micro-interaction */
+      .logo-mark {
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      svg:hover .logo-mark {
+        transform: scale(1.035);
+        transform-origin: 128px 128px;
+      }
+
+      /* GitHub Light Mode Theme Adaptation */
+      @media (prefers-color-scheme: light) {
+        .theme-cyan {
+          stroke: #0284C7 !important;
+        }
+        .theme-node {
+          fill: #0F172A !important;
+        }
+        .theme-loop {
+          stroke: #64748B !important;
+          opacity: 0.55 !important;
+        }
+      }
+    </style>
+  </defs>
+
+  <g class="logo-mark">
+    <!-- 1. Minimal Closed-Loop Orbital Arc (Perceive -> Decide -> Execute -> Verify) -->
+    <path class="theme-loop anim-loop" 
+          d="M 160 48 A 88 88 0 1 0 216 128" 
+          stroke="url(#loopStream)" stroke-width="4.5" stroke-linecap="round"/>
+
+    <!-- Orbital Apex Guide Dot -->
+    <circle cx="216" cy="128" r="3" fill="#FF5500"/>
+
+    <!-- 2. Developer Intent Terminal Chevron '>' -->
+    <path class="theme-cyan anim-glow" 
+          d="M 86 88 L 114 116 L 86 144" 
+          stroke="url(#jevCyan)" stroke-width="13" 
+          stroke-linecap="round" stroke-linejoin="round" 
+          filter="url(#softGlow)"/>
+    <path class="theme-cyan" 
+          d="M 86 88 L 114 116 L 86 144" 
+          stroke="#FFFFFF" stroke-width="5" 
+          stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+
+    <!-- 3. JEVON Monogram 'J' -->
+    <path d="M 154 60 
+             L 154 142 
+             A 30 30 0 0 1 124 172 
+             A 30 30 0 0 1 94 142" 
+          stroke="url(#jevOrange)" stroke-width="17" 
+          stroke-linecap="round" stroke-linejoin="round" 
+          filter="url(#softGlow)"/>
+    <path d="M 154 60 
+             L 154 142 
+             A 30 30 0 0 1 124 172 
+             A 30 30 0 0 1 94 142" 
+          stroke="#FF5500" stroke-width="13.5" 
+          stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- 4. Deterministic Truth Beacon (Verification Apex) -->
+    <g class="anim-beacon">
+      <circle cx="154" cy="60" r="6" fill="#00F2FE" filter="url(#beaconGlow)" opacity="0.8"/>
+      <circle class="theme-node" cx="154" cy="60" r="3" fill="#FFFFFF"/>
+    </g>
+  </g>
+</svg>

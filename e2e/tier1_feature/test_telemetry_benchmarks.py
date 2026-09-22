@@ -16,7 +16,6 @@ from e2e.stubs import (
     MicroBenchmarkMetrics,
 )
 
-
 # ===========================================================================
 # Feature 19: Nanosecond Micro-Benchmark Latency Instrumentation (R6)
 # ===========================================================================

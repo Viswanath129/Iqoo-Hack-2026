@@ -13,13 +13,10 @@ import sys
 import unittest
 
 from e2e.stubs import (
-    ABORT_CORNER_PX,
     ActionReceipt,
     LaptopActionExecutor,
     SafetyGate,
 )
-from jevon.decision.actions import DeveloperAction
-
 
 # ===========================================================================
 # Feature 11: LaptopActionExecutor Adaptation & Process Isolation (R4)

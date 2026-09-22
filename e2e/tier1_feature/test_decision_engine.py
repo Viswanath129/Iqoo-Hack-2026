@@ -11,7 +11,6 @@ Covers:
 
 from __future__ import annotations
 
-import math
 import unittest
 from unittest.mock import MagicMock
 
@@ -25,7 +24,6 @@ from jevon.decision.local_provider import LocalDecisionProvider
 from jevon.decision.provider import DecisionProvider, StateObservation
 from jevon.decision.safety_fallback import SafetyFallback
 from jevon.truth_first.state import TruthFirstState
-
 
 # ===========================================================================
 # Feature 1: DecisionProvider Interface & Polymorphism (R1)

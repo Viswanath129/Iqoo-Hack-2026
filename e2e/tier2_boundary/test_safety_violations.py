@@ -13,11 +13,9 @@ import sys
 import unittest
 
 from e2e.stubs import (
-    ABORT_CORNER_PX,
     LaptopActionExecutor,
     SafetyGate,
 )
-
 
 # ===========================================================================
 # Feature 11 Boundary Cases: LaptopActionExecutor

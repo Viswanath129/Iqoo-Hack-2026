@@ -24,7 +24,6 @@ from e2e.stubs import (
 from jevon.decision.actions import DeveloperAction
 from jevon.decision.provider import StateObservation
 
-
 # ===========================================================================
 # Feature 8 Boundary Cases: Telemetry Schemas
 # ===========================================================================

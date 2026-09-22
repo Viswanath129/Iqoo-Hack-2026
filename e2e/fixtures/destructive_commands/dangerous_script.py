@@ -1,7 +1,7 @@
 """Dangerous developer script designed to test SafetyGate interception."""
 
-import os
 import sys
+
 
 def attempt_hard_reset():
     """Simulates dispatching an unauthorized git reset --hard."""

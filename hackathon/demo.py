@@ -36,24 +36,29 @@ from jevon.telemetry.benchmark import ComparativeBenchmark
 from jevon.truth_first.state import TruthFirstState
 from jevon.verification.engine import VerificationEngine
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 
 def print_banner() -> None:
     print("=" * 70)
     print("       JEVON: ON-DEVICE DEVELOPER DECISION ENGINE       ")
-    print("      iQOO Hackathon 2026 — Developer Tools Track      ")
+    print("      iQOO Hackathon 2026 -- Developer Tools Track      ")
     print("=" * 70)
 
 
 def print_phone_console(state: str, next_action: str, confidence: float, safety: str) -> None:
-    print("\n┌──────────────────────────────┐")
-    print("│ JEVON Developer Control      │")
-    print("├──────────────────────────────┤")
-    print("│ WORKFLOW: Build / Debug      │")
-    print(f"│ CURRENT STATE: {state:<14}│")
-    print(f"│ NEXT ACTION: {next_action:<16}│")
-    print(f"│ CONFIDENCE: {confidence:<17.2f}│")
-    print(f"│ SAFETY: {safety:<21}│")
-    print("└──────────────────────────────┘\n")
+    print("\n+------------------------------+")
+    print("| JEVON Developer Control      |")
+    print("+------------------------------+")
+    print("| WORKFLOW: Build / Debug      |")
+    print(f"| CURRENT STATE: {state:<14}|")
+    print(f"| NEXT ACTION: {next_action:<16}|")
+    print(f"| CONFIDENCE: {confidence:<17.2f}|")
+    print(f"| SAFETY: {safety:<21}|")
+    print("+------------------------------+\n")
 
 
 def run_scenario_1(report_data: list[dict[str, Any]]) -> bool:

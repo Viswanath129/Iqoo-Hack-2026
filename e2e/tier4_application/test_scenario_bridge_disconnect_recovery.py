@@ -13,11 +13,9 @@ import time
 import unittest
 
 from e2e.stubs import (
-    ActionReceipt,
     DecisionCommand,
     IpcTransport,
     OfficeKitBridge,
-    SocketTransport,
 )
 from jevon.decision.actions import DeveloperAction
 from jevon.decision.provider import StateObservation

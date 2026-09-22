@@ -13,11 +13,11 @@ Features Exercised:
 
 from __future__ import annotations
 
-from pathlib import Path
 import shutil
 import sys
 import tempfile
 import unittest
+from pathlib import Path
 
 from e2e.fixtures import BROKEN_SYNTAX_DIR
 from e2e.stubs import (

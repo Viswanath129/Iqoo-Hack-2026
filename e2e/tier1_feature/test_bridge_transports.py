@@ -9,7 +9,6 @@ Total: 15 tests.
 
 from __future__ import annotations
 
-import json
 import time
 import unittest
 
@@ -23,7 +22,6 @@ from e2e.stubs import (
 )
 from jevon.decision.actions import DeveloperAction
 from jevon.decision.provider import StateObservation
-
 
 # ===========================================================================
 # Feature 8: Telemetry Schemas (R2)

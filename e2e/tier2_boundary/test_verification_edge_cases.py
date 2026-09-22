@@ -23,7 +23,6 @@ from jevon.decision.local_provider import LocalDecisionProvider
 from jevon.decision.provider import StateObservation
 from jevon.truth_first.state import TruthFirstState
 
-
 # ===========================================================================
 # Feature 14 Boundary Cases: VerificationEngine
 # ===========================================================================

@@ -19,7 +19,6 @@ from e2e.stubs import (
 from jevon.decision.actions import DeveloperAction, DeveloperDecision
 from jevon.truth_first.state import TruthFirstState, compute_failure_signature
 
-
 # ===========================================================================
 # Feature 7: Truth-First State Model (7 Pillars) (R3)
 # ===========================================================================

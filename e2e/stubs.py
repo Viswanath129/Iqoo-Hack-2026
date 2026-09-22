@@ -7,22 +7,20 @@ modules land in `jevon`, this module transparently bridges to them.
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 import ast
-import asyncio
-from dataclasses import asdict, dataclass, field
 import json
 import os
-from pathlib import Path
 import re
 import subprocess
 import sys
 import time
+from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
-from jevon.decision.actions import DeveloperAction, DeveloperDecision, normalize_probabilities
-from jevon.decision.provider import DecisionProvider, StateObservation
-from jevon.truth_first.state import TruthFirstState
+from jevon.decision.actions import DeveloperAction
+from jevon.decision.provider import StateObservation
 
 # ---------------------------------------------------------------------------
 # 1. DecisionCommand (Phone -> Laptop)
@@ -462,7 +460,7 @@ class LaptopActionExecutor:
                 verification_details={"exit_code": res.returncode},
                 duration_ns=duration_ns,
             )
-        except subprocess.TimeoutExpired as e:
+        except subprocess.TimeoutExpired:
             duration_ns = time.perf_counter_ns() - t0
             return ActionReceipt(
                 command_id="cmd_timeout",

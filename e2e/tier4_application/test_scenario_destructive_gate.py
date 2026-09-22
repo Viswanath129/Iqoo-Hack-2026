@@ -9,18 +9,15 @@ Features Exercised:
 from __future__ import annotations
 
 import json
-import sys
 import unittest
 
 from e2e.fixtures import DESTRUCTIVE_COMMANDS_DIR
 from e2e.stubs import (
-    ActionReceipt,
     LaptopActionExecutor,
     SafetyGate,
 )
 from jevon.decision.actions import DeveloperAction, DeveloperDecision
 from jevon.decision.local_provider import LocalDecisionProvider
-from jevon.decision.provider import StateObservation
 from jevon.truth_first.state import TruthFirstState
 
 
